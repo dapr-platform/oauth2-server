@@ -1,0 +1,265 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "oauth2-server  RESTful API 文档.",
+        "title": "oauth2-server RESTful API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "basePath": "/swagger/oauth2-server",
+    "paths": {
+        "/captcha-gen": {
+            "get": {
+                "description": "获取Captcha",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Oauth2"
+                ],
+                "summary": "获取Captcha",
+                "responses": {
+                    "200": {
+                        "description": "token信息",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "错误code和错误信息",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "get": {
+                "description": "登录",
+                "tags": [
+                    "Oauth2"
+                ],
+                "summary": "login",
+                "responses": {}
+            }
+        },
+        "/oauth/token": {
+            "post": {
+                "description": "获取token",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Oauth2"
+                ],
+                "summary": "获取token",
+                "responses": {
+                    "200": {
+                        "description": "token信息",
+                        "schema": {
+                            "$ref": "#/definitions/model.TokenInfo"
+                        }
+                    },
+                    "500": {
+                        "description": "错误code和错误信息",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/oauth/token-by-field": {
+            "post": {
+                "description": "获取token",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Oauth2"
+                ],
+                "summary": "获取token",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "username",
+                        "name": "username",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "password",
+                        "name": "password",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "grant_type",
+                        "name": "grant_type",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "scope",
+                        "name": "scope",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "client_id",
+                        "name": "client_id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "client_secret",
+                        "name": "client_secret",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "verify_key",
+                        "name": "verify_key",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "verify_value",
+                        "name": "verify_value",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "sms_code",
+                        "name": "sms_code",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "is_travel",
+                        "name": "is_travel",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "token信息",
+                        "schema": {
+                            "$ref": "#/definitions/model.TokenInfo"
+                        }
+                    },
+                    "500": {
+                        "description": "错误code和错误信息",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/login": {
+            "post": {
+                "description": "用户登录,简单方式",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Oauth2"
+                ],
+                "summary": "用户登录",
+                "parameters": [
+                    {
+                        "description": "{}",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UserLogin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "token信息",
+                        "schema": {
+                            "$ref": "#/definitions/model.TokenInfo"
+                        }
+                    },
+                    "500": {
+                        "description": "错误code和错误信息",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "common.Response": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "msg": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.TokenInfo": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "expires_in": {
+                    "type": "integer"
+                },
+                "id_token": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
+                },
+                "scope": {
+                    "type": "string"
+                },
+                "token_type": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.UserLogin": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "user_name": {
+                    "type": "string"
+                },
+                "verify_key": {
+                    "type": "string"
+                },
+                "verify_value": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

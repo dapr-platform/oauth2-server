@@ -1,0 +1,171 @@
+basePath: /swagger/oauth2-server
+definitions:
+  common.Response:
+    properties:
+      data: {}
+      msg:
+        type: string
+      status:
+        type: integer
+    type: object
+  model.TokenInfo:
+    properties:
+      access_token:
+        type: string
+      expires_in:
+        type: integer
+      id_token:
+        type: string
+      refresh_token:
+        type: string
+      scope:
+        type: string
+      token_type:
+        type: string
+    type: object
+  model.UserLogin:
+    properties:
+      password:
+        type: string
+      user_name:
+        type: string
+      verify_key:
+        type: string
+      verify_value:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: oauth2-server  RESTful API 文档.
+  title: oauth2-server RESTful API
+  version: "1.0"
+paths:
+  /captcha-gen:
+    get:
+      description: 获取Captcha
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: token信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: 错误code和错误信息
+          schema:
+            type: string
+      summary: 获取Captcha
+      tags:
+      - Oauth2
+  /login:
+    get:
+      description: 登录
+      responses: {}
+      summary: login
+      tags:
+      - Oauth2
+  /oauth/token:
+    post:
+      description: 获取token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: token信息
+          schema:
+            $ref: '#/definitions/model.TokenInfo'
+        "500":
+          description: 错误code和错误信息
+          schema:
+            type: string
+      summary: 获取token
+      tags:
+      - Oauth2
+  /oauth/token-by-field:
+    post:
+      description: 获取token
+      parameters:
+      - description: username
+        in: formData
+        name: username
+        type: string
+      - description: password
+        in: formData
+        name: password
+        type: string
+      - description: grant_type
+        in: formData
+        name: grant_type
+        type: string
+      - description: scope
+        in: formData
+        name: scope
+        type: string
+      - description: client_id
+        in: formData
+        name: client_id
+        type: string
+      - description: client_secret
+        in: formData
+        name: client_secret
+        type: string
+      - description: verify_key
+        in: formData
+        name: verify_key
+        type: string
+      - description: verify_value
+        in: formData
+        name: verify_value
+        type: string
+      - description: sms_code
+        in: formData
+        name: sms_code
+        type: string
+      - description: is_travel
+        in: formData
+        name: is_travel
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: token信息
+          schema:
+            $ref: '#/definitions/model.TokenInfo'
+        "500":
+          description: 错误code和错误信息
+          schema:
+            type: string
+      summary: 获取token
+      tags:
+      - Oauth2
+  /users/login:
+    post:
+      description: 用户登录,简单方式
+      parameters:
+      - description: '{}'
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: token信息
+          schema:
+            $ref: '#/definitions/model.TokenInfo'
+        "500":
+          description: 错误code和错误信息
+          schema:
+            type: string
+      summary: 用户登录
+      tags:
+      - Oauth2
+swagger: "2.0"
