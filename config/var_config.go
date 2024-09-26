@@ -6,8 +6,8 @@ import (
 
 var DBNAME = "thingsdb"
 
-var CLIENT_INFO_TABLE_NAME = "p_client_info"
-var USER_INFO_TABLE_NAME = "p_user"
+var CLIENT_INFO_TABLE_NAME = "o_client_info"
+var USER_INFO_TABLE_NAME = "o_user"
 
 func init() {
 
