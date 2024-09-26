@@ -21,18 +21,18 @@ func userLoginHandler(w http.ResponseWriter, r *http.Request) {
 	var userLogin model.UserLogin
 	err := common.ReadRequestBody(r, &userLogin)
 	if err != nil {
-		common.HttpResponsResult(w, common.ErrParam.AppendMsg("user login error"))
+		common.HttpResult(w, common.ErrParam.AppendMsg("user login error"))
 		return
 	}
 	if VERIFY_CAPTCHA {
 		vKey := userLogin.VerifyKey
 		vVal := userLogin.VerifyValue
 		if vKey == "" || vVal == "" {
-			common.HttpResponsResult(w, common.ErrParam.AppendMsg("verify value blank"))
+			common.HttpResult(w, common.ErrParam.AppendMsg("verify value blank"))
 			return
 		}
 		if !captcha.VerifyString(vKey, vVal) {
-			common.HttpResponsResult(w, common.ErrParam.AppendMsg("verify  error"))
+			common.HttpResult(w, common.ErrParam.AppendMsg("verify  error"))
 			return
 		}
 
@@ -57,18 +57,18 @@ func userLoginHandler(w http.ResponseWriter, r *http.Request) {
 		ClientSecret: "123456",
 		Request:      r,
 	}
-	userID, err := oauthServer.PasswordAuthorizationHandler(r.Context(), user.ID, userLogin.Password)
+	userID, err := oauthServer.PasswordAuthorizationHandler(r.Context(), "", user.ID, userLogin.Password)
 	if err != nil {
-		common.HttpResponsResult(w, common.ErrParam.AppendMsg(err.Error()))
+		common.HttpResult(w, common.ErrParam.AppendMsg(err.Error()))
 		return
 	} else if userID == "" {
-		common.HttpResponsResult(w, common.ErrParam.AppendMsg("ErrInvalidGrant"))
+		common.HttpResult(w, common.ErrParam.AppendMsg("ErrInvalidGrant"))
 		return
 	}
 	tgr.UserID = userID
 	ti, err := oauthServer.GetAccessToken(r.Context(), gt, tgr)
 	if err != nil {
-		common.HttpResponsResult(w, common.ErrParam.AppendMsg(err.Error()))
+		common.HttpResult(w, common.ErrParam.AppendMsg(err.Error()))
 		return
 	}
 	common.HttpSuccess(w, common.OK.WithData(oauthServer.GetTokenData(ti)))

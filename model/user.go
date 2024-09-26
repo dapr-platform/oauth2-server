@@ -3,15 +3,12 @@ package model
 import (
 	"database/sql"
 	"github.com/dapr-platform/common"
-	"github.com/satori/go.uuid"
 	"time"
 )
 
 var (
 	_ = time.Second
 	_ = sql.LevelDefault
-	_ = null.Bool{}
-	_ = uuid.UUID{}
 	_ = common.LocalTime{}
 )
 
@@ -20,32 +17,27 @@ DB Table Details
 -------------------------------------
 
 
-Table: p_user
+Table: o_user
 [ 0] id                                             VARCHAR(25)          null: false  primary: true   isArray: false  auto: false  col: VARCHAR         len: 25      default: []
-[ 1] mobile                                         VARCHAR(15)          null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 15      default: []
-[ 2] email                                          VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
-[ 3] name                                           VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
-[ 4] zh_name                                        VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
-[ 5] nick_name                                      VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
-[ 6] password                                       VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
-[ 7] type                                           INT4                 null: false  primary: false  isArray: false  auto: false  col: INT4            len: -1      default: []
-[ 8] org_id                                         VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
-[ 9] dep_id                                         VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
-[10] avatar_url                                     VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
-[11] intialized                                     INT4                 null: false  primary: false  isArray: false  auto: false  col: INT4            len: -1      default: []
+[ 1] tenant_id                                      VARCHAR(25)          null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 25      default: []
+[ 2] mobile                                         VARCHAR(15)          null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 15      default: []
+[ 3] email                                          VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
+[ 4] identity                                       VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
+[ 5] name                                           VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
+[ 6] gender                                         INT4                 null: false  primary: false  isArray: false  auto: false  col: INT4            len: -1      default: [0]
+[ 7] address                                        VARCHAR(1024)        null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 1024    default: []
+[ 8] password                                       VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
+[ 9] type                                           INT4                 null: false  primary: false  isArray: false  auto: false  col: INT4            len: -1      default: []
+[10] org_id                                         VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
+[11] avatar_url                                     VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
 [12] create_at                                      TIMESTAMP            null: false  primary: false  isArray: false  auto: false  col: TIMESTAMP       len: -1      default: []
 [13] update_at                                      TIMESTAMP            null: false  primary: false  isArray: false  auto: false  col: TIMESTAMP       len: -1      default: []
-[14] feishu_id                                      VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
-[15] status                                         INT4                 null: false  primary: false  isArray: false  auto: false  col: INT4            len: -1      default: []
-[16] sex                                            INT4                 null: false  primary: false  isArray: false  auto: false  col: INT4            len: -1      default: [0]
-[17] address                                        VARCHAR(1024)        null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 1024    default: []
-[18] province_id                                    VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
-[19] city_id                                        VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
+[14] status                                         INT4                 null: false  primary: false  isArray: false  auto: false  col: INT4            len: -1      default: []
 
 
 JSON Sample
 -------------------------------------
-{    "id": "ftcsOHkBonFdNkEpxnmMdlBEs",    "mobile": "CeovGZCKxjDkEgIuyLfOmXdID",    "email": "VKySJHaIWfnDFwIZEcEgVQngp",    "name": "MFmYXgeBhHcPADneDmienBdIL",    "zh_name": "dPMCEDcikYVIIAbuJmVFVTMNM",    "nick_name": "MtFxGpCKInKIdnrqfOvOrBNkF",    "password": "NSeropIVPiFvAjNkgWXTXaIws",    "type": 69,    "org_id": "jQJnMGCKEreOXIxnlYbbCYcbb",    "dep_id": "CgDmjYebKhmaJPXaExuZAXAIS",    "avatar_url": "ipNqDkVIAOAeIyZhLiAPITbFU",    "intialized": 23,    "create_at": 99,    "update_at": 86,    "feishu_id": "gKQsvAPjeKonNMIcLTAsluFit",    "status": 28,    "sex": 88,    "address": "CbsyUfDIFcgtIoTGtkaHwXexB",    "province_id": "YkCjByvnSawEFmWVJESrelBHO",    "city_id": "dbWXIXUDvGVdZkXufoOnYKheU"}
+{    "id": "UQVxpMvqsCcOXVRXCOIqEodpM",    "tenant_id": "GiGqVCIXNQZkjTFgNCcVgAUQb",    "mobile": "pbQlCTUMWNEQTyXSEJdFSdrdS",    "email": "vjxnXDFODechbLxTtJblMTQbn",    "identity": "kEWnFpEgkSdxPxTwHsqFXoEJO",    "name": "uLBhkEXixPwTrkukjZvWaKUGG",    "gender": 23,    "address": "ipMJuEOJRDPuYGgSTlOvqPngk",    "password": "kWmvZyFSjytkpSxfShNGKkNQr",    "type": 71,    "org_id": "qDjBBhfTwwlHtMtCVbiBAoCnw",    "avatar_url": "cUTBqjkOIfYCBLbbhvvcKlJDS",    "create_at": 26,    "update_at": 69,    "status": 90}
 
 
 
@@ -54,15 +46,19 @@ JSON Sample
 var (
 	User_FIELD_NAME_id = "id"
 
+	User_FIELD_NAME_tenant_id = "tenant_id"
+
 	User_FIELD_NAME_mobile = "mobile"
 
 	User_FIELD_NAME_email = "email"
 
+	User_FIELD_NAME_identity = "identity"
+
 	User_FIELD_NAME_name = "name"
 
-	User_FIELD_NAME_zh_name = "zh_name"
+	User_FIELD_NAME_gender = "gender"
 
-	User_FIELD_NAME_nick_name = "nick_name"
+	User_FIELD_NAME_address = "address"
 
 	User_FIELD_NAME_password = "password"
 
@@ -70,81 +66,43 @@ var (
 
 	User_FIELD_NAME_org_id = "org_id"
 
-	User_FIELD_NAME_dep_id = "dep_id"
-
 	User_FIELD_NAME_avatar_url = "avatar_url"
-
-	User_FIELD_NAME_intialized = "intialized"
 
 	User_FIELD_NAME_create_at = "create_at"
 
 	User_FIELD_NAME_update_at = "update_at"
 
-	User_FIELD_NAME_feishu_id = "feishu_id"
-
 	User_FIELD_NAME_status = "status"
-
-	User_FIELD_NAME_sex = "sex"
-
-	User_FIELD_NAME_address = "address"
-
-	User_FIELD_NAME_province_id = "province_id"
-
-	User_FIELD_NAME_city_id = "city_id"
 )
 
-// User struct is a row record of the p_user table in the thingsdb database
+// User struct is a row record of the o_user table in the  database
 type User struct {
-	//[ 0] id                                             VARCHAR(25)          null: false  primary: true   isArray: false  auto: false  col: VARCHAR         len: 25      default: []
-	ID string `json:"id"`
-	//[ 1] mobile                                         VARCHAR(15)          null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 15      default: []
-	Mobile string `json:"mobile"`
-	//[ 2] email                                          VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
-	Email string `json:"email"`
-	//[ 3] name                                           VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
-	Name string `json:"name"`
-	//[ 4] zh_name                                        VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
-	ZhName string `json:"zh_name"`
-	//[ 5] nick_name                                      VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
-	NickName string `json:"nick_name"`
-	//[ 6] password                                       VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
-	Password string `json:"password"`
-	//[ 7] type                                           INT4                 null: false  primary: false  isArray: false  auto: false  col: INT4            len: -1      default: []
-	Type int32 `json:"type"`
-	//[ 8] org_id                                         VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
-	OrgID string `json:"org_id"`
-	//[ 9] dep_id                                         VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
-	DepID string `json:"dep_id"`
-	//[10] avatar_url                                     VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
-	AvatarURL string `json:"avatar_url"`
-	//[11] intialized                                     INT4                 null: false  primary: false  isArray: false  auto: false  col: INT4            len: -1      default: []
-	Intialized int32 `json:"intialized"`
-	//[12] create_at                                      TIMESTAMP            null: false  primary: false  isArray: false  auto: false  col: TIMESTAMP       len: -1      default: []
-	CreateAt common.LocalTime `json:"create_at"`
-	//[13] update_at                                      TIMESTAMP            null: false  primary: false  isArray: false  auto: false  col: TIMESTAMP       len: -1      default: []
-	UpdateAt common.LocalTime `json:"update_at"`
-	//[14] feishu_id                                      VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
-	FeishuID string `json:"feishu_id"`
-	//[15] status                                         INT4                 null: false  primary: false  isArray: false  auto: false  col: INT4            len: -1      default: []
-	Status int32 `json:"status"`
-	//[16] sex                                            INT4                 null: false  primary: false  isArray: false  auto: false  col: INT4            len: -1      default: [0]
-	Sex int32 `json:"sex"`
-	//[17] address                                        VARCHAR(1024)        null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 1024    default: []
-	Address string `json:"address"`
-	//[18] province_id                                    VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
-	ProvinceID string `json:"province_id"`
-	//[19] city_id                                        VARCHAR(255)         null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 255     default: []
-	CityID string `json:"city_id"`
+	ID        string           `json:"id"`         //id
+	TenantID  string           `json:"tenant_id"`  //tenant_id
+	Mobile    string           `json:"mobile"`     //mobile
+	Email     string           `json:"email"`      //email
+	Identity  string           `json:"identity"`   //identity
+	Name      string           `json:"name"`       //name
+	Gender    int32            `json:"gender"`     //gender
+	Address   string           `json:"address"`    //address
+	Password  string           `json:"password"`   //password
+	Type      int32            `json:"type"`       //type
+	OrgID     string           `json:"org_id"`     //org_id
+	AvatarURL string           `json:"avatar_url"` //avatar_url
+	CreateAt  common.LocalTime `json:"create_at"`  //create_at
+	UpdateAt  common.LocalTime `json:"update_at"`  //update_at
+	Status    int32            `json:"status"`     //status
+
 }
 
 var UserTableInfo = &TableInfo{
-	Name: "p_user",
+	Name: "o_user",
 	Columns: []*ColumnInfo{
 
 		&ColumnInfo{
 			Index:              0,
 			Name:               "id",
-			Comment:            ``,
+			Comment:            `id`,
 			Notes:              ``,
 			Nullable:           false,
 			DatabaseTypeName:   "VARCHAR",
@@ -164,8 +122,29 @@ var UserTableInfo = &TableInfo{
 
 		&ColumnInfo{
 			Index:              1,
+			Name:               "tenant_id",
+			Comment:            `tenant_id`,
+			Notes:              ``,
+			Nullable:           false,
+			DatabaseTypeName:   "VARCHAR",
+			DatabaseTypePretty: "VARCHAR(25)",
+			IsPrimaryKey:       false,
+			IsAutoIncrement:    false,
+			IsArray:            false,
+			ColumnType:         "VARCHAR",
+			ColumnLength:       25,
+			GoFieldName:        "TenantID",
+			GoFieldType:        "string",
+			JSONFieldName:      "tenant_id",
+			ProtobufFieldName:  "tenant_id",
+			ProtobufType:       "string",
+			ProtobufPos:        2,
+		},
+
+		&ColumnInfo{
+			Index:              2,
 			Name:               "mobile",
-			Comment:            ``,
+			Comment:            `mobile`,
 			Notes:              ``,
 			Nullable:           false,
 			DatabaseTypeName:   "VARCHAR",
@@ -180,13 +159,13 @@ var UserTableInfo = &TableInfo{
 			JSONFieldName:      "mobile",
 			ProtobufFieldName:  "mobile",
 			ProtobufType:       "string",
-			ProtobufPos:        2,
+			ProtobufPos:        3,
 		},
 
 		&ColumnInfo{
-			Index:              2,
+			Index:              3,
 			Name:               "email",
-			Comment:            ``,
+			Comment:            `email`,
 			Notes:              ``,
 			Nullable:           false,
 			DatabaseTypeName:   "VARCHAR",
@@ -201,13 +180,34 @@ var UserTableInfo = &TableInfo{
 			JSONFieldName:      "email",
 			ProtobufFieldName:  "email",
 			ProtobufType:       "string",
-			ProtobufPos:        3,
+			ProtobufPos:        4,
 		},
 
 		&ColumnInfo{
-			Index:              3,
+			Index:              4,
+			Name:               "identity",
+			Comment:            `identity`,
+			Notes:              ``,
+			Nullable:           false,
+			DatabaseTypeName:   "VARCHAR",
+			DatabaseTypePretty: "VARCHAR(255)",
+			IsPrimaryKey:       false,
+			IsAutoIncrement:    false,
+			IsArray:            false,
+			ColumnType:         "VARCHAR",
+			ColumnLength:       255,
+			GoFieldName:        "Identity",
+			GoFieldType:        "string",
+			JSONFieldName:      "identity",
+			ProtobufFieldName:  "identity",
+			ProtobufType:       "string",
+			ProtobufPos:        5,
+		},
+
+		&ColumnInfo{
+			Index:              5,
 			Name:               "name",
-			Comment:            ``,
+			Comment:            `name`,
 			Notes:              ``,
 			Nullable:           false,
 			DatabaseTypeName:   "VARCHAR",
@@ -222,55 +222,55 @@ var UserTableInfo = &TableInfo{
 			JSONFieldName:      "name",
 			ProtobufFieldName:  "name",
 			ProtobufType:       "string",
-			ProtobufPos:        4,
-		},
-
-		&ColumnInfo{
-			Index:              4,
-			Name:               "zh_name",
-			Comment:            ``,
-			Notes:              ``,
-			Nullable:           false,
-			DatabaseTypeName:   "VARCHAR",
-			DatabaseTypePretty: "VARCHAR(255)",
-			IsPrimaryKey:       false,
-			IsAutoIncrement:    false,
-			IsArray:            false,
-			ColumnType:         "VARCHAR",
-			ColumnLength:       255,
-			GoFieldName:        "ZhName",
-			GoFieldType:        "string",
-			JSONFieldName:      "zh_name",
-			ProtobufFieldName:  "zh_name",
-			ProtobufType:       "string",
-			ProtobufPos:        5,
-		},
-
-		&ColumnInfo{
-			Index:              5,
-			Name:               "nick_name",
-			Comment:            ``,
-			Notes:              ``,
-			Nullable:           false,
-			DatabaseTypeName:   "VARCHAR",
-			DatabaseTypePretty: "VARCHAR(255)",
-			IsPrimaryKey:       false,
-			IsAutoIncrement:    false,
-			IsArray:            false,
-			ColumnType:         "VARCHAR",
-			ColumnLength:       255,
-			GoFieldName:        "NickName",
-			GoFieldType:        "string",
-			JSONFieldName:      "nick_name",
-			ProtobufFieldName:  "nick_name",
-			ProtobufType:       "string",
 			ProtobufPos:        6,
 		},
 
 		&ColumnInfo{
 			Index:              6,
+			Name:               "gender",
+			Comment:            `gender`,
+			Notes:              ``,
+			Nullable:           false,
+			DatabaseTypeName:   "INT4",
+			DatabaseTypePretty: "INT4",
+			IsPrimaryKey:       false,
+			IsAutoIncrement:    false,
+			IsArray:            false,
+			ColumnType:         "INT4",
+			ColumnLength:       -1,
+			GoFieldName:        "Gender",
+			GoFieldType:        "int32",
+			JSONFieldName:      "gender",
+			ProtobufFieldName:  "gender",
+			ProtobufType:       "int32",
+			ProtobufPos:        7,
+		},
+
+		&ColumnInfo{
+			Index:              7,
+			Name:               "address",
+			Comment:            `address`,
+			Notes:              ``,
+			Nullable:           false,
+			DatabaseTypeName:   "VARCHAR",
+			DatabaseTypePretty: "VARCHAR(1024)",
+			IsPrimaryKey:       false,
+			IsAutoIncrement:    false,
+			IsArray:            false,
+			ColumnType:         "VARCHAR",
+			ColumnLength:       1024,
+			GoFieldName:        "Address",
+			GoFieldType:        "string",
+			JSONFieldName:      "address",
+			ProtobufFieldName:  "address",
+			ProtobufType:       "string",
+			ProtobufPos:        8,
+		},
+
+		&ColumnInfo{
+			Index:              8,
 			Name:               "password",
-			Comment:            ``,
+			Comment:            `password`,
 			Notes:              ``,
 			Nullable:           false,
 			DatabaseTypeName:   "VARCHAR",
@@ -285,13 +285,13 @@ var UserTableInfo = &TableInfo{
 			JSONFieldName:      "password",
 			ProtobufFieldName:  "password",
 			ProtobufType:       "string",
-			ProtobufPos:        7,
+			ProtobufPos:        9,
 		},
 
 		&ColumnInfo{
-			Index:              7,
+			Index:              9,
 			Name:               "type",
-			Comment:            ``,
+			Comment:            `type`,
 			Notes:              ``,
 			Nullable:           false,
 			DatabaseTypeName:   "INT4",
@@ -306,13 +306,13 @@ var UserTableInfo = &TableInfo{
 			JSONFieldName:      "type",
 			ProtobufFieldName:  "type",
 			ProtobufType:       "int32",
-			ProtobufPos:        8,
+			ProtobufPos:        10,
 		},
 
 		&ColumnInfo{
-			Index:              8,
+			Index:              10,
 			Name:               "org_id",
-			Comment:            ``,
+			Comment:            `org_id`,
 			Notes:              ``,
 			Nullable:           false,
 			DatabaseTypeName:   "VARCHAR",
@@ -327,34 +327,13 @@ var UserTableInfo = &TableInfo{
 			JSONFieldName:      "org_id",
 			ProtobufFieldName:  "org_id",
 			ProtobufType:       "string",
-			ProtobufPos:        9,
+			ProtobufPos:        11,
 		},
 
 		&ColumnInfo{
-			Index:              9,
-			Name:               "dep_id",
-			Comment:            ``,
-			Notes:              ``,
-			Nullable:           false,
-			DatabaseTypeName:   "VARCHAR",
-			DatabaseTypePretty: "VARCHAR(255)",
-			IsPrimaryKey:       false,
-			IsAutoIncrement:    false,
-			IsArray:            false,
-			ColumnType:         "VARCHAR",
-			ColumnLength:       255,
-			GoFieldName:        "DepID",
-			GoFieldType:        "string",
-			JSONFieldName:      "dep_id",
-			ProtobufFieldName:  "dep_id",
-			ProtobufType:       "string",
-			ProtobufPos:        10,
-		},
-
-		&ColumnInfo{
-			Index:              10,
+			Index:              11,
 			Name:               "avatar_url",
-			Comment:            ``,
+			Comment:            `avatar_url`,
 			Notes:              ``,
 			Nullable:           false,
 			DatabaseTypeName:   "VARCHAR",
@@ -369,34 +348,13 @@ var UserTableInfo = &TableInfo{
 			JSONFieldName:      "avatar_url",
 			ProtobufFieldName:  "avatar_url",
 			ProtobufType:       "string",
-			ProtobufPos:        11,
-		},
-
-		&ColumnInfo{
-			Index:              11,
-			Name:               "intialized",
-			Comment:            ``,
-			Notes:              ``,
-			Nullable:           false,
-			DatabaseTypeName:   "INT4",
-			DatabaseTypePretty: "INT4",
-			IsPrimaryKey:       false,
-			IsAutoIncrement:    false,
-			IsArray:            false,
-			ColumnType:         "INT4",
-			ColumnLength:       -1,
-			GoFieldName:        "Intialized",
-			GoFieldType:        "int32",
-			JSONFieldName:      "intialized",
-			ProtobufFieldName:  "intialized",
-			ProtobufType:       "int32",
 			ProtobufPos:        12,
 		},
 
 		&ColumnInfo{
 			Index:              12,
 			Name:               "create_at",
-			Comment:            ``,
+			Comment:            `create_at`,
 			Notes:              ``,
 			Nullable:           false,
 			DatabaseTypeName:   "TIMESTAMP",
@@ -417,7 +375,7 @@ var UserTableInfo = &TableInfo{
 		&ColumnInfo{
 			Index:              13,
 			Name:               "update_at",
-			Comment:            ``,
+			Comment:            `update_at`,
 			Notes:              ``,
 			Nullable:           false,
 			DatabaseTypeName:   "TIMESTAMP",
@@ -437,29 +395,8 @@ var UserTableInfo = &TableInfo{
 
 		&ColumnInfo{
 			Index:              14,
-			Name:               "feishu_id",
-			Comment:            ``,
-			Notes:              ``,
-			Nullable:           false,
-			DatabaseTypeName:   "VARCHAR",
-			DatabaseTypePretty: "VARCHAR(255)",
-			IsPrimaryKey:       false,
-			IsAutoIncrement:    false,
-			IsArray:            false,
-			ColumnType:         "VARCHAR",
-			ColumnLength:       255,
-			GoFieldName:        "FeishuID",
-			GoFieldType:        "string",
-			JSONFieldName:      "feishu_id",
-			ProtobufFieldName:  "feishu_id",
-			ProtobufType:       "string",
-			ProtobufPos:        15,
-		},
-
-		&ColumnInfo{
-			Index:              15,
 			Name:               "status",
-			Comment:            ``,
+			Comment:            `status`,
 			Notes:              ``,
 			Nullable:           false,
 			DatabaseTypeName:   "INT4",
@@ -474,98 +411,14 @@ var UserTableInfo = &TableInfo{
 			JSONFieldName:      "status",
 			ProtobufFieldName:  "status",
 			ProtobufType:       "int32",
-			ProtobufPos:        16,
-		},
-
-		&ColumnInfo{
-			Index:              16,
-			Name:               "sex",
-			Comment:            ``,
-			Notes:              ``,
-			Nullable:           false,
-			DatabaseTypeName:   "INT4",
-			DatabaseTypePretty: "INT4",
-			IsPrimaryKey:       false,
-			IsAutoIncrement:    false,
-			IsArray:            false,
-			ColumnType:         "INT4",
-			ColumnLength:       -1,
-			GoFieldName:        "Sex",
-			GoFieldType:        "int32",
-			JSONFieldName:      "sex",
-			ProtobufFieldName:  "sex",
-			ProtobufType:       "int32",
-			ProtobufPos:        17,
-		},
-
-		&ColumnInfo{
-			Index:              17,
-			Name:               "address",
-			Comment:            ``,
-			Notes:              ``,
-			Nullable:           false,
-			DatabaseTypeName:   "VARCHAR",
-			DatabaseTypePretty: "VARCHAR(1024)",
-			IsPrimaryKey:       false,
-			IsAutoIncrement:    false,
-			IsArray:            false,
-			ColumnType:         "VARCHAR",
-			ColumnLength:       1024,
-			GoFieldName:        "Address",
-			GoFieldType:        "string",
-			JSONFieldName:      "address",
-			ProtobufFieldName:  "address",
-			ProtobufType:       "string",
-			ProtobufPos:        18,
-		},
-
-		&ColumnInfo{
-			Index:              18,
-			Name:               "province_id",
-			Comment:            ``,
-			Notes:              ``,
-			Nullable:           false,
-			DatabaseTypeName:   "VARCHAR",
-			DatabaseTypePretty: "VARCHAR(255)",
-			IsPrimaryKey:       false,
-			IsAutoIncrement:    false,
-			IsArray:            false,
-			ColumnType:         "VARCHAR",
-			ColumnLength:       255,
-			GoFieldName:        "ProvinceID",
-			GoFieldType:        "string",
-			JSONFieldName:      "province_id",
-			ProtobufFieldName:  "province_id",
-			ProtobufType:       "string",
-			ProtobufPos:        19,
-		},
-
-		&ColumnInfo{
-			Index:              19,
-			Name:               "city_id",
-			Comment:            ``,
-			Notes:              ``,
-			Nullable:           false,
-			DatabaseTypeName:   "VARCHAR",
-			DatabaseTypePretty: "VARCHAR(255)",
-			IsPrimaryKey:       false,
-			IsAutoIncrement:    false,
-			IsArray:            false,
-			ColumnType:         "VARCHAR",
-			ColumnLength:       255,
-			GoFieldName:        "CityID",
-			GoFieldType:        "string",
-			JSONFieldName:      "city_id",
-			ProtobufFieldName:  "city_id",
-			ProtobufType:       "string",
-			ProtobufPos:        20,
+			ProtobufPos:        15,
 		},
 	},
 }
 
 // TableName sets the insert table name for this struct type
 func (u *User) TableName() string {
-	return "p_user"
+	return "o_user"
 }
 
 // BeforeSave invoked before saving, return an error if field is not populated.

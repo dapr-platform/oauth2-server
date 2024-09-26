@@ -3,15 +3,12 @@ package model
 import (
 	"database/sql"
 	"github.com/dapr-platform/common"
-	"github.com/guregu/null"
 	"time"
 )
 
 var (
 	_ = time.Second
 	_ = sql.LevelDefault
-	_ = null.Bool{}
-	_ = uuid.UUID{}
 	_ = common.LocalTime{}
 )
 
@@ -20,14 +17,14 @@ DB Table Details
 -------------------------------------
 
 
-Table: p_client_info
+Table: o_client_info
 [ 0] id                                             VARCHAR(32)          null: false  primary: true   isArray: false  auto: false  col: VARCHAR         len: 32      default: []
 [ 1] password                                       VARCHAR(32)          null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 32      default: []
 
 
 JSON Sample
 -------------------------------------
-{    "id": "wPpvfbKQfByLjRQVEaRiXrrOS",    "password": "QSPQGDdYbLBMHkYPmCHPxPPLL"}
+{    "id": "TwTITmOwYCNXkTibKIDnVpLqk",    "password": "lKxisrAdITgMHWbhcwTKaEHLD"}
 
 
 
@@ -39,22 +36,21 @@ var (
 	Client_info_FIELD_NAME_password = "password"
 )
 
-// Client_info struct is a row record of the p_client_info table in the thingsdb database
+// Client_info struct is a row record of the o_client_info table in the  database
 type Client_info struct {
-	//[ 0] id                                             VARCHAR(32)          null: false  primary: true   isArray: false  auto: false  col: VARCHAR         len: 32      default: []
-	ID string `json:"id"`
-	//[ 1] password                                       VARCHAR(32)          null: false  primary: false  isArray: false  auto: false  col: VARCHAR         len: 32      default: []
-	Password string `json:"password"`
+	ID       string `json:"id"`       //id
+	Password string `json:"password"` //password
+
 }
 
 var Client_infoTableInfo = &TableInfo{
-	Name: "p_client_info",
+	Name: "o_client_info",
 	Columns: []*ColumnInfo{
 
 		&ColumnInfo{
 			Index:              0,
 			Name:               "id",
-			Comment:            ``,
+			Comment:            `id`,
 			Notes:              ``,
 			Nullable:           false,
 			DatabaseTypeName:   "VARCHAR",
@@ -75,7 +71,7 @@ var Client_infoTableInfo = &TableInfo{
 		&ColumnInfo{
 			Index:              1,
 			Name:               "password",
-			Comment:            ``,
+			Comment:            `password`,
 			Notes:              ``,
 			Nullable:           false,
 			DatabaseTypeName:   "VARCHAR",
@@ -97,7 +93,7 @@ var Client_infoTableInfo = &TableInfo{
 
 // TableName sets the insert table name for this struct type
 func (c *Client_info) TableName() string {
-	return "p_client_info"
+	return "o_client_info"
 }
 
 // BeforeSave invoked before saving, return an error if field is not populated.

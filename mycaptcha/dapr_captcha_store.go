@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/dapr-platform/common"
 	daprc "github.com/dapr/go-sdk/client"
-	"oauth2-server/dapr"
 	"strconv"
 	"time"
 )
@@ -31,7 +30,7 @@ func (impl *DaprCaptchaStore) Set(id string, digits []byte) {
 		},
 	}
 
-	err := common.GetDaprClient().SaveBulkState(context.Background(), dapr.StateStoreName, item)
+	err := common.GetDaprClient().SaveBulkState(context.Background(), common.DAPR_STATESTORE_NAME, item)
 	if err != nil {
 		common.Logger.Error("save mycaptcha error", err)
 		panic(err)
@@ -39,13 +38,13 @@ func (impl *DaprCaptchaStore) Set(id string, digits []byte) {
 }
 
 func (impl *DaprCaptchaStore) Get(id string, clear bool) (digits []byte) {
-	item, err := common.GetDaprClient().GetState(context.Background(), dapr.StateStoreName, id, nil)
+	item, err := common.GetDaprClient().GetState(context.Background(), common.DAPR_STATESTORE_NAME, id, nil)
 	if err != nil {
 		common.Logger.Error("mycaptcha GetState error:", err)
 		panic(err)
 	}
 	if clear {
-		err = common.GetDaprClient().DeleteState(context.Background(), dapr.StateStoreName, id, make(map[string]string))
+		err = common.GetDaprClient().DeleteState(context.Background(), common.DAPR_STATESTORE_NAME, id, make(map[string]string))
 		if err != nil {
 			common.Logger.Error("mycaptcha delete error:", err)
 			panic(err)
