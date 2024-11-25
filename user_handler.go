@@ -1,12 +1,13 @@
 package main
 
 import (
-	"github.com/dapr-platform/common"
-	"github.com/dchest/captcha"
-	"github.com/go-oauth2/oauth2/v4"
 	"net/http"
 	"oauth2-server/model"
 	"oauth2-server/service"
+
+	"github.com/dapr-platform/common"
+	"github.com/dchest/captcha"
+	"github.com/go-oauth2/oauth2/v4"
 )
 
 // @Summary 用户登录
@@ -74,4 +75,28 @@ func userLoginHandler(w http.ResponseWriter, r *http.Request) {
 	common.HttpSuccess(w, common.OK.WithData(oauthServer.GetTokenData(ti)))
 	return
 
+}
+
+// @Summary 发送短信验证码
+// @Description 发送短信验证码
+// @Tags Oauth2
+// @Param data body model.SmsCodeGet true "{}"
+// @Produce  json
+// @Success 200 {object} model.SmsCodeGet "短信验证码"
+// @Failure 500 {object} string "错误code和错误信息"
+// @Router /sms-code/send [post]
+func smsCodeSendHandler(w http.ResponseWriter, r *http.Request) {
+	var smsCodeGet model.SmsCodeGet
+	err := common.ReadRequestBody(r, &smsCodeGet)
+	if err != nil {
+		common.HttpResult(w, common.ErrParam.AppendMsg("sms code get error"))
+		return
+	}
+	code, err := service.GetSmsCode(r.Context(), smsCodeGet.Phone)
+	if err != nil {
+		common.HttpResult(w, common.ErrParam.AppendMsg(err.Error()))
+		return
+	}
+	common.HttpSuccess(w, common.OK.WithData(code))
+	return
 }

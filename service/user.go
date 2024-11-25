@@ -5,12 +5,14 @@ import (
 	"context"
 	"encoding/binary"
 	"encoding/json"
-	"github.com/dapr-platform/common"
-	"github.com/pkg/errors"
 	"net/url"
 	"oauth2-server/model"
 	"strconv"
 	"time"
+
+	"github.com/dapr-platform/common"
+	"github.com/pkg/errors"
+	"golang.org/x/exp/rand"
 )
 
 var smsVerfyCodeKeyPrefix = "SmsCode:"
@@ -41,6 +43,30 @@ func CheckMobileSmsCode(ctx context.Context, mobile, code string) (valid bool, e
 		return
 	}
 	valid = true
+	return
+}
+func SendSmsCode(ctx context.Context, mobile string) (code string, err error) {
+	exists, err := common.GetInStateStore(ctx, common.GetDaprClient(), common.GLOBAL_STATESTOR_NAME, smsVerfyCodeKeyPrefix+mobile)
+	if err != nil {
+		err = errors.Wrap(err, "GetInStateStore")
+		return
+	}
+	if exists != nil {
+		return
+	}
+	code, err = GenerateSmsCode(ctx, mobile)
+	if err != nil {
+		return
+	}
+	err = common.SaveInStateStore(ctx, common.GetDaprClient(), common.GLOBAL_STATESTOR_NAME, smsVerfyCodeKeyPrefix+mobile, []byte(code), true, time.Minute*1)
+	if err != nil {
+		return
+	}
+	//TODO 发送短信
+	return
+}
+func GenerateSmsCode(ctx context.Context, mobile string) (code string, err error) {
+	code = strconv.Itoa(rand.Intn(10000))
 	return
 }
 

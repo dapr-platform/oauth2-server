@@ -279,16 +279,7 @@ func tokenByFieldHandler(w http.ResponseWriter, r *http.Request) {
 		username := r.FormValue("username")
 		var field string
 		field = "name"
-		/*
-			if strings.Index(username, "+86") == 0 {
-				field = "mobile"
-			} else if strings.Index(username, "@") > 0 {
-				field = "email"
-			} else {
-				field = "name"
-			}
-
-		*/
+		
 
 		value := username
 		isTravelStr := r.FormValue("is_travel")

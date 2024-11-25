@@ -16,7 +16,7 @@ COPY . .
 #RUN go clean -modcache && rm -f go.sum && go mod tidy
 #RUN  rm -f go.sum && go mod tidy
 #RUN swag init --parseDependency --parseInternal --parseDepth 1
-RUN go build -ldflags "-s -w" -o  oauth2-server && upx -9 oauth2-server
+RUN buildTime=$(date "+%Y-%m-%d_%H:%M:%S") && go build -ldflags "-s -w -X oauth2-server/main.BUILD_TIME=${buildTime}" -o  oauth2-server && upx -9 oauth2-server
 
 FROM alpine:3.19
 RUN  apk add --no-cache tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
