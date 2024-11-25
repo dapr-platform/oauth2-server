@@ -92,7 +92,7 @@ func smsCodeSendHandler(w http.ResponseWriter, r *http.Request) {
 		common.HttpResult(w, common.ErrParam.AppendMsg("sms code get error"))
 		return
 	}
-	code, err := service.GetSmsCode(r.Context(), smsCodeGet.Phone)
+	code, err := service.SendSmsCode(r.Context(), smsCodeGet.Phone)
 	if err != nil {
 		common.HttpResult(w, common.ErrParam.AppendMsg(err.Error()))
 		return
