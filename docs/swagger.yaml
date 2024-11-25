@@ -8,6 +8,11 @@ definitions:
       status:
         type: integer
     type: object
+  model.SmsCodeGet:
+    properties:
+      phone:
+        type: string
+    type: object
   model.TokenInfo:
     properties:
       access_token:
@@ -142,6 +147,30 @@ paths:
           schema:
             type: string
       summary: 获取token
+      tags:
+      - Oauth2
+  /sms-code/send:
+    post:
+      description: 发送短信验证码
+      parameters:
+      - description: '{}'
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.SmsCodeGet'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 短信验证码
+          schema:
+            $ref: '#/definitions/model.SmsCodeGet'
+        "500":
+          description: 错误code和错误信息
+          schema:
+            type: string
+      summary: 发送短信验证码
       tags:
       - Oauth2
   /users/login:

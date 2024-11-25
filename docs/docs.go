@@ -177,6 +177,43 @@ const docTemplate = `{
                 }
             }
         },
+        "/sms-code/send": {
+            "post": {
+                "description": "发送短信验证码",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Oauth2"
+                ],
+                "summary": "发送短信验证码",
+                "parameters": [
+                    {
+                        "description": "{}",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.SmsCodeGet"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "短信验证码",
+                        "schema": {
+                            "$ref": "#/definitions/model.SmsCodeGet"
+                        }
+                    },
+                    "500": {
+                        "description": "错误code和错误信息",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/users/login": {
             "post": {
                 "description": "用户登录,简单方式",
@@ -225,6 +262,14 @@ const docTemplate = `{
                 },
                 "status": {
                     "type": "integer"
+                }
+            }
+        },
+        "model.SmsCodeGet": {
+            "type": "object",
+            "properties": {
+                "phone": {
+                    "type": "string"
                 }
             }
         },
