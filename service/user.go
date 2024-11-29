@@ -62,6 +62,7 @@ func SendSmsCode(ctx context.Context, mobile string) (code string, err error) {
 	if err != nil {
 		return
 	}
+	common.Logger.Info("发送短信验证码", "mobile", mobile, "code", code)
 	//TODO 发送短信
 	return
 }
@@ -112,11 +113,11 @@ func GetUserByIdAndPassword(ctx context.Context, id, password string) (user *mod
 
 	users, err := common.DbQuery[model.User](ctx, common.GetDaprClient(), model.UserTableInfo.Name, "id="+id+"&password="+password)
 	if err != nil {
-		common.Logger.Error("db query error", err)
+		common.Logger.Error("db query error ", err)
 		return nil, nil
 	}
 	if len(users) == 0 {
-		common.Logger.Error("user not found", id)
+		common.Logger.Error("user not found ", id)
 		return nil, nil
 	}
 	user = &users[0]

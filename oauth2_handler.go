@@ -3,11 +3,6 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"github.com/dapr-platform/common"
-	"github.com/dchest/captcha"
-	"github.com/go-oauth2/oauth2/v4/models"
-	"github.com/go-session/session"
-	"github.com/pkg/errors"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -17,6 +12,12 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	"github.com/dapr-platform/common"
+	"github.com/dchest/captcha"
+	"github.com/go-oauth2/oauth2/v4/models"
+	"github.com/go-session/session"
+	"github.com/pkg/errors"
 )
 
 func passwordAuthHandler(ctx context.Context, clientId, id, password string) (userID string, err error) {
@@ -159,16 +160,6 @@ func tokenHandler(w http.ResponseWriter, r *http.Request) {
 		username := r.FormValue("username")
 		var field string
 		field = "name"
-		/*
-			if strings.Index(username, "+86") == 0 {
-				field = "mobile"
-			} else if strings.Index(username, "@") > 0 {
-				field = "email"
-			} else {
-				field = "name"
-			}
-
-		*/
 
 		value := username
 
@@ -279,7 +270,6 @@ func tokenByFieldHandler(w http.ResponseWriter, r *http.Request) {
 		username := r.FormValue("username")
 		var field string
 		field = "name"
-		
 
 		value := username
 		isTravelStr := r.FormValue("is_travel")
