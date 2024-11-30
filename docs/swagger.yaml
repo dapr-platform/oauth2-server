@@ -28,6 +28,54 @@ definitions:
       token_type:
         type: string
     type: object
+  model.User:
+    properties:
+      address:
+        description: address
+        type: string
+      avatar_url:
+        description: avatar_url
+        type: string
+      create_at:
+        description: create_at
+        type: string
+      email:
+        description: email
+        type: string
+      gender:
+        description: gender
+        type: integer
+      id:
+        description: id
+        type: string
+      identity:
+        description: identity
+        type: string
+      mobile:
+        description: mobile
+        type: string
+      name:
+        description: name
+        type: string
+      org_id:
+        description: org_id
+        type: string
+      password:
+        description: password
+        type: string
+      status:
+        description: status
+        type: integer
+      tenant_id:
+        description: tenant_id
+        type: string
+      type:
+        description: type
+        type: integer
+      update_at:
+        description: update_at
+        type: string
+    type: object
   model.UserLogin:
     properties:
       password:
@@ -195,6 +243,38 @@ paths:
           schema:
             type: string
       summary: 用户登录
+      tags:
+      - Oauth2
+  /users/register:
+    post:
+      description: 用户注册
+      parameters:
+      - description: 短信验证码,如果系统配置为不需要验证码，则不传
+        in: query
+        name: sms_code
+        type: string
+      - description: '{}'
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 用户信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.User'
+              type: object
+        "500":
+          description: 错误code和错误信息
+          schema:
+            $ref: '#/definitions/common.Response'
       tags:
       - Oauth2
 swagger: "2.0"

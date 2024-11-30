@@ -10,6 +10,37 @@ import (
 	"github.com/go-oauth2/oauth2/v4"
 )
 
+// 用户注册
+// @Description 用户注册
+// @Tags Oauth2
+// @Param sms_code query string false "短信验证码,如果系统配置为不需要验证码，则不传"
+// @Param data body model.User true "{}"
+// @Produce  json
+// @Success 200 {object} common.Response{data=model.User} "用户信息"
+// @Failure 500 {object} common.Response "错误code和错误信息"
+// @Router /users/register [post]
+func userRegisterHandler(w http.ResponseWriter, r *http.Request) {
+	if REGISTER_SMS_CODE {
+		smsCode := r.URL.Query().Get("sms_code")
+		if smsCode == "" {
+			common.HttpResult(w, common.ErrParam.AppendMsg("sms code blank"))
+			return
+		}
+	}
+	var user model.User
+	err := common.ReadRequestBody(r, &user)
+	if err != nil {
+		common.HttpResult(w, common.ErrParam.AppendMsg("user register error"))
+		return
+	}
+	err = service.CreateUser(r.Context(), &user)
+	if err != nil {
+		common.HttpResult(w, common.ErrParam.AppendMsg(err.Error()))
+		return
+	}
+	common.HttpSuccess(w, common.OK.WithData(user))
+}
+
 // @Summary 用户登录
 // @Description 用户登录,简单方式
 // @Tags Oauth2

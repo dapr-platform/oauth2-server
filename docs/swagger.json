@@ -243,6 +243,60 @@
                     }
                 }
             }
+        },
+        "/users/register": {
+            "post": {
+                "description": "用户注册",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Oauth2"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "短信验证码,如果系统配置为不需要验证码，则不传",
+                        "name": "sms_code",
+                        "in": "query"
+                    },
+                    {
+                        "description": "{}",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "用户信息",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/model.User"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "错误code和错误信息",
+                        "schema": {
+                            "$ref": "#/definitions/common.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -285,6 +339,71 @@
                     "type": "string"
                 },
                 "token_type": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.User": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "description": "address",
+                    "type": "string"
+                },
+                "avatar_url": {
+                    "description": "avatar_url",
+                    "type": "string"
+                },
+                "create_at": {
+                    "description": "create_at",
+                    "type": "string"
+                },
+                "email": {
+                    "description": "email",
+                    "type": "string"
+                },
+                "gender": {
+                    "description": "gender",
+                    "type": "integer"
+                },
+                "id": {
+                    "description": "id",
+                    "type": "string"
+                },
+                "identity": {
+                    "description": "identity",
+                    "type": "string"
+                },
+                "mobile": {
+                    "description": "mobile",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "name",
+                    "type": "string"
+                },
+                "org_id": {
+                    "description": "org_id",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "password",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "status",
+                    "type": "integer"
+                },
+                "tenant_id": {
+                    "description": "tenant_id",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "type",
+                    "type": "integer"
+                },
+                "update_at": {
+                    "description": "update_at",
                     "type": "string"
                 }
             }

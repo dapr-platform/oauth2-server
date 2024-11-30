@@ -19,6 +19,7 @@ import (
 
 	"github.com/dapr-platform/common"
 	daprd "github.com/dapr/go-sdk/service/http"
+	"github.com/dchest/captcha"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-oauth2/oauth2/v4/errors"
 	"github.com/go-oauth2/oauth2/v4/generates"
@@ -39,16 +40,17 @@ var oauthServer *server.Server
 var clientStore *dapr.ClientStore
 var captchaHandler http.Handler
 var VERIFY_CAPTCHA = false
-
+var REGISTER_SMS_CODE = false
 var BUILD_TIME = ""
 
 // 创建一个配置结构体
 type Config struct {
-	ListenPort    int
-	VerifyCaptcha bool
-	TokenExpiry   time.Duration
-	RefreshExpiry time.Duration
-	JWTSecret     []byte
+	ListenPort      int
+	VerifyCaptcha   bool
+	RegisterSmsCode bool
+	TokenExpiry     time.Duration
+	RefreshExpiry   time.Duration
+	JWTSecret       []byte
 }
 
 // 从环境变量加载配置
@@ -69,6 +71,9 @@ func loadConfig() *Config {
 
 	if verify := os.Getenv("VERIFY_CAPTCHA"); verify == "true" {
 		cfg.VerifyCaptcha = true
+	}
+	if registerSmsCode := os.Getenv("REGISTER_SMS_CODE"); registerSmsCode == "true" {
+		cfg.RegisterSmsCode = true
 	}
 
 	if secret := os.Getenv("JWT_SECRET"); secret != "" {
@@ -132,7 +137,7 @@ func setupRoutes(mux *chi.Mux) {
 	if mux == nil {
 		panic("mux cannot be nil")
 	}
-
+	captchaHandler = captcha.Server(captcha.StdWidth, captcha.StdHeight)
 	// OAuth routes
 	mux.HandleFunc("/oauth/authorize", authorizeHandler)
 	mux.HandleFunc("/oauth/token", tokenHandler)
@@ -157,6 +162,7 @@ func setupRoutes(mux *chi.Mux) {
 
 	// User routes
 	mux.HandleFunc("/users/login", userLoginHandler)
+	mux.HandleFunc("/users/register", userRegisterHandler)
 	mux.HandleFunc("/sms-code/send", smsCodeSendHandler)
 
 	// Swagger
