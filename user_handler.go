@@ -20,19 +20,30 @@ import (
 // @Failure 500 {object} common.Response "错误code和错误信息"
 // @Router /users/register [post]
 func userRegisterHandler(w http.ResponseWriter, r *http.Request) {
-	if REGISTER_SMS_CODE {
-		smsCode := r.URL.Query().Get("sms_code")
-		if smsCode == "" {
-			common.HttpResult(w, common.ErrParam.AppendMsg("sms code blank"))
-			return
-		}
-	}
 	var user model.User
 	err := common.ReadRequestBody(r, &user)
 	if err != nil {
 		common.HttpResult(w, common.ErrParam.AppendMsg("user register error"))
 		return
 	}
+	smsCode := r.URL.Query().Get("sms_code")
+	if smsCode == "" {
+		if REGISTER_SMS_CODE {
+			common.HttpResult(w, common.ErrParam.AppendMsg("sms code blank"))
+			return
+		}
+	} else {
+		valid, err := service.CheckMobileSmsCode(r.Context(), user.Mobile, smsCode)
+		if err != nil {
+			common.HttpResult(w, common.ErrParam.AppendMsg(err.Error()))
+			return
+		}
+		if !valid {
+			common.HttpResult(w, common.ErrParam.AppendMsg("验证码错误"))
+			return
+		}
+	}
+
 	err = service.CreateUser(r.Context(), &user)
 	if err != nil {
 		common.HttpResult(w, common.ErrParam.AppendMsg(err.Error()))
