@@ -14,6 +14,9 @@ import (
 	"github.com/pkg/errors"
 	"golang.org/x/exp/rand"
 )
+type CountVal struct {
+	Count int64 `json:"count"`
+}
 
 var smsVerfyCodeKeyPrefix = "SmsCode:"
 
@@ -74,12 +77,16 @@ func CreateUser(ctx context.Context, user *model.User) (err error) {
 	user.ID = common.NanoId()
 	user.CreateAt = common.LocalTime(time.Now())
 	user.UpdateAt = common.LocalTime(time.Now())
-	exists, err := GetUserByFieldName(ctx, model.User_FIELD_NAME_name, user.Name, false)
+
+	countVal, err := common.DbGetCount[CountVal](ctx, common.GetDaprClient(), model.UserTableInfo.Name, "name="+user.Name)
 	if err != nil {
 		return errors.Wrap(err, "get user by name error")
 	}
-	if exists != nil {
-		return errors.New("用户名已存在")
+	if countVal != nil {
+		count := countVal.Count
+		if count > 0 {
+			return errors.New("用户名已存在")
+		}
 	}
 	_, err = common.DbInsert[model.User](ctx, common.GetDaprClient(), *user, model.UserTableInfo.Name)
 	if err != nil {
