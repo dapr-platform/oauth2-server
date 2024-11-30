@@ -24,7 +24,7 @@ Table: o_client_info
 
 JSON Sample
 -------------------------------------
-{    "id": "TwTITmOwYCNXkTibKIDnVpLqk",    "password": "lKxisrAdITgMHWbhcwTKaEHLD"}
+{    "id": "ARtodSJjNjdDAuISCeeXyyJrt",    "password": "DJEsMagEwexiiZtNOKnlojucb"}
 
 
 
@@ -38,7 +38,8 @@ var (
 
 // Client_info struct is a row record of the o_client_info table in the  database
 type Client_info struct {
-	ID       string `json:"id"`       //id
+	ID string `json:"id"` //id
+
 	Password string `json:"password"` //password
 
 }
