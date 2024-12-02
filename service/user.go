@@ -64,7 +64,7 @@ func SendSmsCode(ctx context.Context, mobile string) (code string, err error) {
 	if err != nil {
 		return
 	}
-	err = common.SaveInStateStore(ctx, common.GetDaprClient(), common.GLOBAL_STATESTOR_NAME, smsVerfyCodeKeyPrefix+mobile, []byte(code), true, time.Minute*1)
+	err = common.SaveInStateStore(ctx, common.GetDaprClient(), common.GLOBAL_STATESTOR_NAME, smsVerfyCodeKeyPrefix+mobile, []byte(code), true, time.Minute*3)
 	if err != nil {
 		return
 	}
