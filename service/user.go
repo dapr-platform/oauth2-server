@@ -6,7 +6,9 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"net/url"
+	"oauth2-server/config"
 	"oauth2-server/model"
+	"oauth2-server/sms"
 	"strconv"
 	"time"
 
@@ -67,7 +69,12 @@ func SendSmsCode(ctx context.Context, mobile string) (code string, err error) {
 		return
 	}
 	common.Logger.Info("发送短信验证码", "mobile", mobile, "code", code)
-	//TODO 发送短信
+	err = sms.SendSmsCode(config.ALI_SMS_REGION, config.ALI_SMS_ACCESS_ID, config.ALI_SMS_ACCESS_SECRET, config.ALI_SMS_SIGN_NAME, config.ALI_SMS_TEMPLATE_CODE, mobile, code)
+	if err != nil {
+		err = errors.Wrap(err, "发送短信验证码失败")
+		return
+	}
+	code = "" // 发送成功后清空
 	return
 }
 func GenerateSmsCode(ctx context.Context, mobile string) (code string, err error) {
