@@ -7,30 +7,39 @@ import (
 
 	openapi "github.com/alibabacloud-go/darabonba-openapi/v2/client"
 	dysmsapi20170525 "github.com/alibabacloud-go/dysmsapi-20170525/v4/client"
-	console "github.com/alibabacloud-go/tea-console/client"
 	util "github.com/alibabacloud-go/tea-utils/v2/service"
 	"github.com/alibabacloud-go/tea/tea"
 )
 
-var client *dysmsapi20170525.Client
-var clientOnce sync.Once
+var (
+	client *dysmsapi20170525.Client
+	clientOnce sync.Once
+	clientErr error
+)
 
 func GetClient(region, accessId, accessSecret string) (*dysmsapi20170525.Client, error) {
 	clientOnce.Do(func() {
 		config := &openapi.Config{
-			// 必填，请确保代码运行环境设置了环境变量 ALIBABA_CLOUD_ACCESS_KEY_ID。
-			AccessKeyId: tea.String(accessId),
-			// 必填，请确保代码运行环境设置了环境变量 ALIBABA_CLOUD_ACCESS_KEY_SECRET。
+			AccessKeyId:     tea.String(accessId),
 			AccessKeySecret: tea.String(accessSecret),
 		}
-		// Endpoint 请参考 https://api.aliyun.com/product/Dysmsapi
 		config.Endpoint = tea.String("dysmsapi.aliyuncs.com")
 		_result, _err := dysmsapi20170525.NewClient(config)
 		if _err != nil {
-			panic(_err)
+			clientErr = fmt.Errorf("create aliyun sms client failed: %v", _err)
+			return
 		}
 		client = _result
 	})
+
+	if clientErr != nil {
+		return nil, clientErr
+	}
+	
+	if client == nil {
+		return nil, fmt.Errorf("aliyun sms client is nil")
+	}
+
 	return client, nil
 }
 
@@ -52,26 +61,27 @@ func SendSmsCode(region, accessId, accessSecret, signName, templateCode, phone, 
 		TemplateParam: tea.String("{\"code\":\"" + code + "\"}"),
 	}
 	runtime := &util.RuntimeOptions{}
-	tryErr := func() (_e error) {
-		defer func() {
-			if r := tea.Recover(recover()); r != nil {
-				_e = r
-			}
-		}()
-		resp, _err := client.SendSmsWithOptions(request, runtime)
-		if _err != nil {
-			return _err
-		}
+	
+	resp, err := client.SendSmsWithOptions(request, runtime)
+	if err != nil {
+		return fmt.Errorf("send sms failed: %v", err)
+	}
 
-		console.Log(util.ToJSONString(resp))
-		if *resp.StatusCode != 200 {
-			return fmt.Errorf("send sms code failed: %v", *resp.StatusCode)
-		}
-		if *resp.Body.Code != "OK" {
-			return fmt.Errorf("send sms code failed: %v", resp.Body.Message)
-		}
-		return nil
-	}()
+	if resp == nil {
+		return fmt.Errorf("send sms response is nil")
+	}
 
-	return tryErr
+	if resp.StatusCode == nil || *resp.StatusCode != 200 {
+		return fmt.Errorf("send sms code failed with status code: %v", resp.StatusCode)
+	}
+
+	if resp.Body == nil || resp.Body.Code == nil || *resp.Body.Code != "OK" {
+		var msg string
+		if resp.Body != nil && resp.Body.Message != nil {
+			msg = *resp.Body.Message
+		}
+		return fmt.Errorf("send sms code failed: %v", msg)
+	}
+
+	return nil
 }
