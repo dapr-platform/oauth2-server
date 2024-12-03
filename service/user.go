@@ -58,19 +58,26 @@ func SendSmsCode(ctx context.Context, mobile string) (code string, err error) {
 		return
 	}
 	if exists != nil {
+		common.Logger.Info("短信验证码已存在", "mobile", mobile)
+		err = errors.New("短信验证码已存在")
 		return
 	}
 	code, err = GenerateSmsCode(ctx, mobile)
 	if err != nil {
+		common.Logger.Error("生成短信验证码失败", "error", err)
+		err = errors.Wrap(err, "生成短信验证码失败")
 		return
 	}
 	err = common.SaveInStateStore(ctx, common.GetDaprClient(), common.GLOBAL_STATESTOR_NAME, smsVerfyCodeKeyPrefix+mobile, []byte(code), true, time.Minute*3)
 	if err != nil {
+		common.Logger.Error("保存短信验证码失败", "error", err)
+		err = errors.Wrap(err, "保存短信验证码失败")
 		return
 	}
 	common.Logger.Info("发送短信验证码", "mobile", mobile, "code", code)
 	err = sms.SendSmsCode(config.ALI_SMS_REGION, config.ALI_SMS_ACCESS_ID, config.ALI_SMS_ACCESS_SECRET, config.ALI_SMS_SIGN_NAME, config.ALI_SMS_TEMPLATE_CODE, mobile, code)
 	if err != nil {
+		common.Logger.Error("发送短信验证码失败", "error", err)
 		err = errors.Wrap(err, "发送短信验证码失败")
 		return
 	}

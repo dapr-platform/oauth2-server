@@ -46,10 +46,10 @@ func SendSmsCode(region, accessId, accessSecret, signName, templateCode, phone, 
 	}
 
 	request := &dysmsapi20170525.SendSmsRequest{
-		PhoneNumbers:   tea.String(phone),
-		SignName:       tea.String(signName),
-		TemplateCode:   tea.String(templateCode),
-		TemplateParam:  tea.String("{\"code\":\"" + code + "\"}"),
+		PhoneNumbers:  tea.String(phone),
+		SignName:      tea.String(signName),
+		TemplateCode:  tea.String(templateCode),
+		TemplateParam: tea.String("{\"code\":\"" + code + "\"}"),
 	}
 	runtime := &util.RuntimeOptions{}
 	tryErr := func() (_e error) {
@@ -64,7 +64,12 @@ func SendSmsCode(region, accessId, accessSecret, signName, templateCode, phone, 
 		}
 
 		console.Log(util.ToJSONString(resp))
-
+		if *resp.StatusCode != 200 {
+			return fmt.Errorf("send sms code failed: %v", *resp.StatusCode)
+		}
+		if *resp.Body.Code != "OK" {
+			return fmt.Errorf("send sms code failed: %v", resp.Body.Message)
+		}
 		return nil
 	}()
 
