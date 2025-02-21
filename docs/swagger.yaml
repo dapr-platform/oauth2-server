@@ -1,5 +1,15 @@
 basePath: /swagger/oauth2-server
 definitions:
+  common.Page:
+    properties:
+      items: {}
+      page:
+        type: integer
+      page_size:
+        type: integer
+      total:
+        type: integer
+    type: object
   common.Response:
     properties:
       data: {}
@@ -7,6 +17,15 @@ definitions:
         type: string
       status:
         type: integer
+    type: object
+  model.Client_info:
+    properties:
+      id:
+        description: id
+        type: string
+      password:
+        description: password
+        type: string
     type: object
   model.SmsCodeGet:
     properties:
@@ -31,49 +50,61 @@ definitions:
   model.User:
     properties:
       address:
-        description: address
+        description: 地址
         type: string
       avatar_url:
-        description: avatar_url
+        description: 头像
         type: string
       create_at:
-        description: create_at
+        description: 创建时间
         type: string
       email:
-        description: email
+        description: 邮箱
         type: string
       gender:
-        description: gender
+        description: 性别(0:未知,1:男,2:女)
         type: integer
       id:
-        description: id
+        description: Primary Key
+        type: string
+      id_card:
+        description: 身份证
         type: string
       identity:
-        description: identity
+        description: 用户标识
         type: string
       mobile:
-        description: mobile
+        description: 手机号
         type: string
       name:
-        description: name
+        description: 姓名
         type: string
       org_id:
-        description: org_id
+        description: 组织ID
         type: string
       password:
-        description: password
+        description: 密码
+        type: string
+      remark:
+        description: 备注
         type: string
       status:
-        description: status
+        description: 状态(1正常，2:禁止登陆，3:删除
         type: integer
       tenant_id:
-        description: tenant_id
+        description: 租户ID
         type: string
       type:
-        description: type
+        description: 用户类型,1:管理员,2:普通用户,3:访客
         type: integer
       update_at:
-        description: update_at
+        description: 更新时间
+        type: string
+      work_number:
+        description: 工号
+        type: string
+      zh_name:
+        description: 中文名
         type: string
     type: object
   model.UserLogin:
@@ -115,6 +146,251 @@ paths:
       summary: 获取Captcha
       tags:
       - Oauth2
+  /client-info:
+    get:
+      description: query objects
+      parameters:
+      - description: _select
+        in: query
+        name: _select
+        type: string
+      - description: order
+        in: query
+        name: _order
+        type: string
+      - description: id
+        in: query
+        name: id
+        type: string
+      - description: password
+        in: query
+        name: password
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: objects array
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/model.Client_info'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: query objects
+      tags:
+      - Client_info
+    post:
+      consumes:
+      - application/json
+      description: save
+      parameters:
+      - description: object
+        in: body
+        name: item
+        required: true
+        schema:
+          $ref: '#/definitions/model.Client_info'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: object
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.Client_info'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: save
+      tags:
+      - Client_info
+  /client-info/{id}:
+    delete:
+      description: delete
+      parameters:
+      - description: 实例id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: object
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.Client_info'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: delete
+      tags:
+      - Client_info
+  /client-info/batch-delete:
+    post:
+      consumes:
+      - application/json
+      description: batch delete
+      parameters:
+      - description: id array
+        in: body
+        name: ids
+        required: true
+        schema:
+          items:
+            type: string
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: batch delete
+      tags:
+      - Client_info
+  /client-info/batch-upsert:
+    post:
+      consumes:
+      - application/json
+      description: batch update
+      parameters:
+      - description: objects array
+        in: body
+        name: entities
+        required: true
+        schema:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: batch update
+      tags:
+      - Client_info
+  /client-info/groupby:
+    get:
+      description: GroupBy, for example,  _select=level, then return  {level_val1:sum1,level_val2:sum2},
+        _where can input status=0
+      parameters:
+      - description: _select
+        in: query
+        name: _select
+        required: true
+        type: string
+      - description: _where
+        in: query
+        name: _where
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: objects array
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    additionalProperties: true
+                    type: object
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: GroupBy
+      tags:
+      - Client_info
+  /client-info/page:
+    get:
+      description: page query, _page(from 1 begin), _page_size, _order, and others
+        fields, status=1, name=$like.%CAM%
+      parameters:
+      - description: current page
+        in: query
+        name: _page
+        required: true
+        type: integer
+      - description: page size
+        in: query
+        name: _page_size
+        required: true
+        type: integer
+      - description: order
+        in: query
+        name: _order
+        type: string
+      - description: id
+        in: query
+        name: id
+        type: string
+      - description: password
+        in: query
+        name: password
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: objects array
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/common.Page'
+                  - properties:
+                      items:
+                        items:
+                          $ref: '#/definitions/model.Client_info'
+                        type: array
+                    type: object
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: page query
+      tags:
+      - Client_info
   /login:
     get:
       description: 登录
@@ -221,6 +497,387 @@ paths:
       summary: 发送短信验证码
       tags:
       - Oauth2
+  /user:
+    get:
+      description: query objects
+      parameters:
+      - description: _select
+        in: query
+        name: _select
+        type: string
+      - description: order
+        in: query
+        name: _order
+        type: string
+      - description: id
+        in: query
+        name: id
+        type: string
+      - description: tenant_id
+        in: query
+        name: tenant_id
+        type: string
+      - description: mobile
+        in: query
+        name: mobile
+        type: string
+      - description: email
+        in: query
+        name: email
+        type: string
+      - description: identity
+        in: query
+        name: identity
+        type: string
+      - description: name
+        in: query
+        name: name
+        type: string
+      - description: zh_name
+        in: query
+        name: zh_name
+        type: string
+      - description: gender
+        in: query
+        name: gender
+        type: string
+      - description: address
+        in: query
+        name: address
+        type: string
+      - description: password
+        in: query
+        name: password
+        type: string
+      - description: type
+        in: query
+        name: type
+        type: string
+      - description: org_id
+        in: query
+        name: org_id
+        type: string
+      - description: id_card
+        in: query
+        name: id_card
+        type: string
+      - description: work_number
+        in: query
+        name: work_number
+        type: string
+      - description: avatar_url
+        in: query
+        name: avatar_url
+        type: string
+      - description: create_at
+        in: query
+        name: create_at
+        type: string
+      - description: update_at
+        in: query
+        name: update_at
+        type: string
+      - description: remark
+        in: query
+        name: remark
+        type: string
+      - description: status
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: objects array
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/model.User'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: query objects
+      tags:
+      - 用户
+    post:
+      consumes:
+      - application/json
+      description: save
+      parameters:
+      - description: object
+        in: body
+        name: item
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: object
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.User'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: save
+      tags:
+      - 用户
+  /user/{id}:
+    delete:
+      description: delete
+      parameters:
+      - description: 实例id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: object
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.User'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: delete
+      tags:
+      - 用户
+  /user/batch-delete:
+    post:
+      consumes:
+      - application/json
+      description: batch delete
+      parameters:
+      - description: id array
+        in: body
+        name: ids
+        required: true
+        schema:
+          items:
+            type: string
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: batch delete
+      tags:
+      - 用户
+  /user/batch-upsert:
+    post:
+      consumes:
+      - application/json
+      description: batch update
+      parameters:
+      - description: objects array
+        in: body
+        name: entities
+        required: true
+        schema:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: batch update
+      tags:
+      - 用户
+  /user/groupby:
+    get:
+      description: GroupBy, for example,  _select=level, then return  {level_val1:sum1,level_val2:sum2},
+        _where can input status=0
+      parameters:
+      - description: _select
+        in: query
+        name: _select
+        required: true
+        type: string
+      - description: _where
+        in: query
+        name: _where
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: objects array
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    additionalProperties: true
+                    type: object
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: GroupBy
+      tags:
+      - 用户
+  /user/page:
+    get:
+      description: page query, _page(from 1 begin), _page_size, _order, and others
+        fields, status=1, name=$like.%CAM%
+      parameters:
+      - description: current page
+        in: query
+        name: _page
+        required: true
+        type: integer
+      - description: page size
+        in: query
+        name: _page_size
+        required: true
+        type: integer
+      - description: order
+        in: query
+        name: _order
+        type: string
+      - description: id
+        in: query
+        name: id
+        type: string
+      - description: tenant_id
+        in: query
+        name: tenant_id
+        type: string
+      - description: mobile
+        in: query
+        name: mobile
+        type: string
+      - description: email
+        in: query
+        name: email
+        type: string
+      - description: identity
+        in: query
+        name: identity
+        type: string
+      - description: name
+        in: query
+        name: name
+        type: string
+      - description: zh_name
+        in: query
+        name: zh_name
+        type: string
+      - description: gender
+        in: query
+        name: gender
+        type: string
+      - description: address
+        in: query
+        name: address
+        type: string
+      - description: password
+        in: query
+        name: password
+        type: string
+      - description: type
+        in: query
+        name: type
+        type: string
+      - description: org_id
+        in: query
+        name: org_id
+        type: string
+      - description: id_card
+        in: query
+        name: id_card
+        type: string
+      - description: work_number
+        in: query
+        name: work_number
+        type: string
+      - description: avatar_url
+        in: query
+        name: avatar_url
+        type: string
+      - description: create_at
+        in: query
+        name: create_at
+        type: string
+      - description: update_at
+        in: query
+        name: update_at
+        type: string
+      - description: remark
+        in: query
+        name: remark
+        type: string
+      - description: status
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: objects array
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/common.Page'
+                  - properties:
+                      items:
+                        items:
+                          $ref: '#/definitions/model.User'
+                        type: array
+                    type: object
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: page query
+      tags:
+      - 用户
   /users/login:
     post:
       description: 用户登录,简单方式
