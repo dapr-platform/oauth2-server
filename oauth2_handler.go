@@ -268,6 +268,10 @@ func tokenByFieldHandler(w http.ResponseWriter, r *http.Request) {
 	grantType := r.FormValue("grant_type")
 	if grantType != "refresh_token" {
 		username := r.FormValue("username")
+		if username == "" {
+			http.Error(w, "用户名不能为空", http.StatusBadRequest)
+			return
+		}
 		var field string
 		field = "name"
 

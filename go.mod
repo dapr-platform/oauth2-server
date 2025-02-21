@@ -10,7 +10,7 @@ require (
 	github.com/alibabacloud-go/tea v1.2.2
 	github.com/alibabacloud-go/tea-console v1.0.0
 	github.com/alibabacloud-go/tea-utils/v2 v2.0.7
-	github.com/dapr-platform/common v1.0.0-20241129-1
+	github.com/dapr-platform/common v1.0.0-20250221
 	github.com/dapr/go-sdk v1.11.0
 	github.com/dchest/captcha v1.0.0
 	github.com/go-chi/chi/v5 v5.1.0
