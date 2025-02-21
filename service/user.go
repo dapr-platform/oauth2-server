@@ -1,9 +1,7 @@
 package service
 
 import (
-	"bytes"
 	"context"
-	"encoding/binary"
 	"encoding/json"
 	"net/url"
 	"oauth2-server/config"
@@ -39,21 +37,11 @@ func CheckMobileSmsCode(ctx context.Context, mobile, code string) (valid bool, e
 		return
 	}
 
-	var x uint32
-	err = binary.Read(bytes.NewBuffer(exists), binary.BigEndian, &x)
-	if err != nil {
-		err = errors.Wrap(err, "验证码处理错误,读取错误")
-		return
-	}
+	var x string
+	x = string(exists)
 
-	codi, err := strconv.Atoi(code)
-	if err != nil {
-		err = errors.Wrap(err, "验证码不是数字")
-		return
-	}
-
-	if x != uint32(codi) {
-		common.Logger.Error("验证码错误", "mobile", mobile, "code", code, "expected", x, "actual", codi)
+	if x != code {
+		common.Logger.Error("验证码错误", "mobile", mobile, "code", code, "expected", x, "actual", code)
 		err = errors.New("验证码错误")
 		return
 	}
@@ -68,42 +56,55 @@ func CheckMobileSmsCode(ctx context.Context, mobile, code string) (valid bool, e
 	valid = true
 	return
 }
+
 func SendSmsCode(ctx context.Context, mobile string) (code string, err error) {
+	if mobile == "" {
+		err = errors.New("手机号不能为空")
+		return
+	}
+
 	exists, err := common.GetInStateStore(ctx, common.GetDaprClient(), common.GLOBAL_STATESTOR_NAME, smsVerfyCodeKeyPrefix+mobile)
 	if err != nil {
 		err = errors.Wrap(err, "GetInStateStore")
 		return
 	}
-	if exists != nil {
+	if exists != nil && len(exists) > 0 {
 		common.Logger.Info("短信验证码已存在", "mobile", mobile)
 		err = errors.New("短信验证码已存在")
 		return
 	}
+
 	code, err = GenerateSmsCode(ctx, mobile)
 	if err != nil {
 		common.Logger.Error("生成短信验证码失败", "error", err)
 		err = errors.Wrap(err, "生成短信验证码失败")
 		return
 	}
+
+	// 先发送短信,成功后再保存验证码
+	err = sms.SendSmsCode(config.ALI_SMS_REGION, config.ALI_SMS_ACCESS_ID, config.ALI_SMS_ACCESS_SECRET, config.ALI_SMS_SIGN_NAME, config.ALI_SMS_TEMPLATE_CODE, mobile, code)
+	if err != nil {
+		common.Logger.Error("发送短信验证码失败", "error", err)
+		err = errors.Wrap(err, "发送短信验证码失败")
+		return
+	}
+
 	err = common.SaveInStateStore(ctx, common.GetDaprClient(), common.GLOBAL_STATESTOR_NAME, smsVerfyCodeKeyPrefix+mobile, []byte(code), true, time.Minute*3)
 	if err != nil {
 		common.Logger.Error("保存短信验证码失败", "error", err)
 		err = errors.Wrap(err, "保存短信验证码失败")
 		return
 	}
-	common.Logger.Info("发送短信验证码", "mobile", mobile, "code", code)
-	err = sms.SendSmsCode(config.ALI_SMS_REGION, config.ALI_SMS_ACCESS_ID, config.ALI_SMS_ACCESS_SECRET, config.ALI_SMS_SIGN_NAME, config.ALI_SMS_TEMPLATE_CODE, mobile, code)
-	if err != nil {
-		common.Logger.Error("发送短信验证码失败", "error", err)
-		err = errors.Wrap(err, "发送短信验证码失败")
-		common.SaveInStateStore(ctx, common.GetDaprClient(), common.GLOBAL_STATESTOR_NAME, smsVerfyCodeKeyPrefix+mobile, []byte(""), true, time.Second)
-		return
-	}
+
+	common.Logger.Info("发送短信验证码成功", "mobile", mobile)
 	code = "" // 发送成功后清空
 	return
 }
+
 func GenerateSmsCode(ctx context.Context, mobile string) (code string, err error) {
-	code = strconv.Itoa(rand.Intn(10000))
+	// 生成6位数字验证码
+	num := rand.Intn(900000) + 100000
+	code = strconv.Itoa(num)
 	return
 }
 func CreateUser(ctx context.Context, user *model.User) (err error) {
