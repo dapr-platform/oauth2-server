@@ -24,30 +24,47 @@ type CountVal struct {
 var smsVerfyCodeKeyPrefix = "SmsCode:"
 
 func CheckMobileSmsCode(ctx context.Context, mobile, code string) (valid bool, err error) {
+	if mobile == "" || code == "" {
+		err = errors.New("手机号或验证码不能为空")
+		return
+	}
+
 	exists, err := common.GetInStateStore(ctx, common.GetDaprClient(), common.GLOBAL_STATESTOR_NAME, smsVerfyCodeKeyPrefix+mobile)
 	if err != nil {
 		err = errors.Wrap(err, "GetInStateStore")
 		return
 	}
 	if len(exists) == 0 {
-		err = errors.New("验证码不存在")
+		err = errors.New("验证码不存在或已过期")
 		return
 	}
+
 	var x uint32
 	err = binary.Read(bytes.NewBuffer(exists), binary.BigEndian, &x)
 	if err != nil {
-		err = errors.Wrap(err, "验证码处理错误")
+		err = errors.Wrap(err, "验证码处理错误,读取错误")
 		return
 	}
+
 	codi, err := strconv.Atoi(code)
 	if err != nil {
 		err = errors.Wrap(err, "验证码不是数字")
 		return
 	}
+
 	if x != uint32(codi) {
+		common.Logger.Error("验证码错误", "mobile", mobile, "code", code, "expected", x, "actual", codi)
 		err = errors.New("验证码错误")
 		return
 	}
+
+	// 验证成功后删除验证码
+	err = common.SaveInStateStore(ctx, common.GetDaprClient(), common.GLOBAL_STATESTOR_NAME, smsVerfyCodeKeyPrefix+mobile, nil, true, 0)
+	if err != nil {
+		common.Logger.Error("删除验证码失败", "error", err)
+		// 不影响验证结果
+	}
+
 	valid = true
 	return
 }
