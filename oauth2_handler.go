@@ -286,11 +286,11 @@ func tokenByFieldHandler(w http.ResponseWriter, r *http.Request) {
 		if sms_code != "" { //如果是验证码登录，那么就先校验验证码，成功后，获取密码，后面走oauth流程
 			valid, err := service.CheckMobileSmsCode(r.Context(), value, sms_code)
 			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
+				http.Error(w, err.Error(), 499)
 				return
 			}
 			if !valid {
-				http.Error(w, "短信验证码错误", http.StatusNotAcceptable)
+				http.Error(w, "短信验证码错误", 499)
 				return
 			}
 			passwd, err := service.GetUserPasswordByField(r.Context(), field, value, isTravel)
