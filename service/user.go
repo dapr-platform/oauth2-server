@@ -89,7 +89,7 @@ func SendSmsCode(ctx context.Context, mobile string) (code string, err error) {
 		return
 	}
 
-	err = common.SaveInStateStore(ctx, common.GetDaprClient(), common.GLOBAL_STATESTOR_NAME, smsVerfyCodeKeyPrefix+mobile, []byte(code), true, time.Minute*3)
+	err = common.SaveInStateStore(ctx, common.GetDaprClient(), common.GLOBAL_STATESTOR_NAME, smsVerfyCodeKeyPrefix+mobile, []byte(code), true, time.Minute*5)
 	if err != nil {
 		common.Logger.Error("保存短信验证码失败", "error", err)
 		err = errors.Wrap(err, "保存短信验证码失败")
