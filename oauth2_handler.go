@@ -281,7 +281,20 @@ func tokenByFieldHandler(w http.ResponseWriter, r *http.Request) {
 		if isTravelStr == "1" {
 			isTravel = true
 		}
+		user, err := service.GetUserByFieldName(r.Context(), field, value, isTravel)
+		if err != nil {
+			http.Error(w, "系统错误:"+err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if user == nil {
+			http.Error(w, "用户不存在", 499)
+			return
+		}
 
+		if user.Status != 1 {
+			http.Error(w, "用户已停用", 498)
+			return
+		}
 		sms_code := r.FormValue("sms_code")
 		if sms_code != "" { //如果是验证码登录，那么就先校验验证码，成功后，获取密码，后面走oauth流程
 			valid, err := service.CheckMobileSmsCode(r.Context(), value, sms_code)
@@ -315,19 +328,7 @@ func tokenByFieldHandler(w http.ResponseWriter, r *http.Request) {
 			}
 
 		}
-		user, err := service.GetUserByFieldName(r.Context(), field, value, isTravel)
-		if err != nil {
-			http.Error(w, "系统错误:"+err.Error(), http.StatusInternalServerError)
-			return
-		}
-		if user == nil {
-			http.Error(w, "用户不存在", 499)
-			return
-		}
-		if user.Status != 1 {
-			http.Error(w, "用户已停用", 498)
-			return
-		}
+		
 
 		r.Form.Set("username", user.ID)
 	}
