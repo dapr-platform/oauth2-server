@@ -306,12 +306,6 @@ func tokenByFieldHandler(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, "短信验证码错误", 499)
 				return
 			}
-			passwd, err := service.GetUserPasswordByField(r.Context(), field, value, isTravel)
-			if err != nil {
-				http.Error(w, "获取用户错误 "+err.Error(), http.StatusInternalServerError)
-				return
-			}
-			r.Form.Set("password", passwd)
 
 		}
 
@@ -328,8 +322,18 @@ func tokenByFieldHandler(w http.ResponseWriter, r *http.Request) {
 			}
 
 		}
-		
 
+		passwd, err := service.GetUserPasswordByField(r.Context(), field, value, isTravel)
+		if err != nil {
+			http.Error(w, "获取用户错误 "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		if passwd != r.FormValue("password") {
+			http.Error(w, "密码错误", 496)
+			return
+		}
+		r.Form.Set("password", passwd)
 		r.Form.Set("username", user.ID)
 	}
 	err := oauthServer.HandleTokenRequest(w, r)
