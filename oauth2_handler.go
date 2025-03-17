@@ -329,7 +329,7 @@ func tokenByFieldHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if passwd != r.FormValue("password") {
+		if sms_code == "" && passwd != r.FormValue("password") {
 			http.Error(w, "密码错误", 496)
 			return
 		}
