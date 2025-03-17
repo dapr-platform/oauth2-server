@@ -29,7 +29,7 @@ func userRegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 	count, err := common.DbGetCount(r.Context(), common.GetDaprClient(), model.UserTableInfo.Name, "name", "name="+user.Name)
 	if err != nil {
-		common.HttpResult(w, common.ErrParam.AppendMsg("系统错误:" + err.Error()))
+		common.HttpResult(w, common.ErrParam.AppendMsg("系统错误:"+err.Error()))
 		return
 	}
 	if count > 0 {
@@ -39,7 +39,7 @@ func userRegisterHandler(w http.ResponseWriter, r *http.Request) {
 	smsCode := r.URL.Query().Get("sms_code")
 	if smsCode == "" {
 		if REGISTER_SMS_CODE {
-			common.HttpResult(w, common.ErrParam.AppendMsg("sms code blank"))
+			common.HttpResult(w, common.ErrParam.AppendMsg("短信验证码不能为空"))
 			return
 		}
 	} else {

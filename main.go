@@ -79,7 +79,8 @@ func loadConfig() *Config {
 	if secret := os.Getenv("JWT_SECRET"); secret != "" {
 		cfg.JWTSecret = []byte(secret)
 	}
-
+	cfgJson, _ := json.Marshal(cfg)
+	common.Logger.Info("loadConfig", "cfg", string(cfgJson))
 	return cfg
 }
 
