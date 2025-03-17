@@ -287,12 +287,12 @@ func tokenByFieldHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if user == nil {
-			http.Error(w, "用户不存在", 499)
+			http.Error(w, "用户不存在", 498)
 			return
 		}
 
 		if user.Status != 1 {
-			http.Error(w, "用户已停用", 498)
+			http.Error(w, "用户已停用", 497)
 			return
 		}
 		sms_code := r.FormValue("sms_code")
