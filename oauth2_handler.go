@@ -146,83 +146,22 @@ func authorizeHandler(w http.ResponseWriter, r *http.Request) {
 // @Description 获取token
 // @Tags Oauth2
 // @Produce  json
+// @Param username formData string false "username"
+// @Param password formData string false "password"
+// @Param grant_type formData string false "grant_type"
+// @Param scope formData string false "scope"
+// @Param client_id formData string false "client_id"
+// @Param client_secret formData string false "client_secret"
+// @Param verify_key formData string false "verify_key"
+// @Param verify_value formData string false "verify_value"
+// @Param sms_code formData string false "sms_code"
+// @Param is_travel formData string false "is_travel"
+// @Param refresh_token formData string false "refresh_token"
 // @Success 200 {object} model.TokenInfo "token信息"
 // @Failure 500 {object} string "错误code和错误信息"
 // @Router /oauth/token [post]
 func tokenHandler(w http.ResponseWriter, r *http.Request) {
-	if dumpvar {
-		_ = dumpRequest(os.Stdout, "token", r) // Ignore the error
-	}
-
-	grantType := r.FormValue("grant_type")
-
-	if grantType != "refresh_token" { //refresh token
-		username := r.FormValue("username")
-		var field string
-		field = "name"
-
-		value := username
-
-		isTravelStr := r.FormValue("is_travel")
-		isTravel := false
-		if isTravelStr == "1" {
-			isTravel = true
-		}
-		sms_code := r.FormValue("sms_code")
-		if sms_code != "" { //如果是验证码登录，那么就先校验验证码，成功后，获取密码，后面走oauth流程
-			valid, err := service.CheckMobileSmsCode(r.Context(), value, sms_code)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
-				return
-			}
-			if !valid {
-				http.Error(w, "短信验证码错误", http.StatusNotAcceptable)
-				return
-			}
-			passwd, err := service.GetUserPasswordByField(r.Context(), field, value, isTravel)
-			if err != nil {
-				http.Error(w, "获取用户错误 "+err.Error(), http.StatusInternalServerError)
-				return
-			}
-			r.Form.Set("password", passwd)
-
-		}
-		if VERIFY_CAPTCHA && !isTravel && sms_code == "" {
-			vKey := r.FormValue("verify_key")
-			vVal := r.FormValue("verify_value")
-			if vKey == "" || vVal == "" {
-				http.Error(w, "验证码为空", http.StatusBadRequest)
-				return
-			}
-			if !captcha.VerifyString(vKey, vVal) {
-				http.Error(w, "验证码错误", http.StatusNotAcceptable)
-				return
-			}
-
-		}
-		user, err := service.GetUserByFieldName(r.Context(), field, value, isTravel)
-		if err != nil {
-			http.Error(w, "GetUserByFieldName "+err.Error(), http.StatusBadRequest)
-			return
-		}
-		if user == nil {
-			http.Error(w, "用户不存在", 499)
-			return
-		}
-		if user.Status != 1 {
-			http.Error(w, "用户已停用", 498)
-			return
-		}
-		r.Form.Set("username", user.ID)
-
-	}
-
-	err := oauthServer.HandleTokenRequest(w, r)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-
-	}
-
+	processTokenByField(w, r, "name")
 }
 
 // @Summary 获取Captcha
@@ -258,11 +197,20 @@ func captchaGen(w http.ResponseWriter, r *http.Request) {
 // @Param sms_code formData string false "sms_code"
 // @Param is_travel formData string false "is_travel"
 // @Param refresh_token formData string false "refresh_token"
+// @Param field formData string false "field"
 // @Produce  json
 // @Success 200 {object} model.TokenInfo "token信息"
 // @Failure 500 {object} string "错误code和错误信息"
 // @Router /oauth/token-by-field [post]
 func tokenByFieldHandler(w http.ResponseWriter, r *http.Request) {
+	var field = r.FormValue("field")
+	if field == "" {
+		field = "name"
+	}
+	processTokenByField(w, r, field)
+}
+
+func processTokenByField(w http.ResponseWriter, r *http.Request, field string) {
 	if dumpvar {
 		_ = dumpRequest(os.Stdout, "token", r) // Ignore the error
 	}
@@ -273,9 +221,6 @@ func tokenByFieldHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "用户名不能为空", http.StatusBadRequest)
 			return
 		}
-		var field string
-		field = "name"
-
 		value := username
 		isTravelStr := r.FormValue("is_travel")
 		isTravel := false

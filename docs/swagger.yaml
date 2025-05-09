@@ -401,6 +401,51 @@ paths:
   /oauth/token:
     post:
       description: 获取token
+      parameters:
+      - description: username
+        in: formData
+        name: username
+        type: string
+      - description: password
+        in: formData
+        name: password
+        type: string
+      - description: grant_type
+        in: formData
+        name: grant_type
+        type: string
+      - description: scope
+        in: formData
+        name: scope
+        type: string
+      - description: client_id
+        in: formData
+        name: client_id
+        type: string
+      - description: client_secret
+        in: formData
+        name: client_secret
+        type: string
+      - description: verify_key
+        in: formData
+        name: verify_key
+        type: string
+      - description: verify_value
+        in: formData
+        name: verify_value
+        type: string
+      - description: sms_code
+        in: formData
+        name: sms_code
+        type: string
+      - description: is_travel
+        in: formData
+        name: is_travel
+        type: string
+      - description: refresh_token
+        in: formData
+        name: refresh_token
+        type: string
       produces:
       - application/json
       responses:
@@ -462,6 +507,10 @@ paths:
       - description: refresh_token
         in: formData
         name: refresh_token
+        type: string
+      - description: field
+        in: formData
+        name: field
         type: string
       produces:
       - application/json

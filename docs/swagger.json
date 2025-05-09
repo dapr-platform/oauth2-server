@@ -461,6 +461,74 @@
                     "Oauth2"
                 ],
                 "summary": "获取token",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "username",
+                        "name": "username",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "password",
+                        "name": "password",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "grant_type",
+                        "name": "grant_type",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "scope",
+                        "name": "scope",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "client_id",
+                        "name": "client_id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "client_secret",
+                        "name": "client_secret",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "verify_key",
+                        "name": "verify_key",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "verify_value",
+                        "name": "verify_value",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "sms_code",
+                        "name": "sms_code",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "is_travel",
+                        "name": "is_travel",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "refresh_token",
+                        "name": "refresh_token",
+                        "in": "formData"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "token信息",
@@ -552,6 +620,12 @@
                         "type": "string",
                         "description": "refresh_token",
                         "name": "refresh_token",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "field",
+                        "name": "field",
                         "in": "formData"
                     }
                 ],
