@@ -257,6 +257,7 @@ func captchaGen(w http.ResponseWriter, r *http.Request) {
 // @Param verify_value formData string false "verify_value"
 // @Param sms_code formData string false "sms_code"
 // @Param is_travel formData string false "is_travel"
+// @Param refresh_token formData string false "refresh_token"
 // @Produce  json
 // @Success 200 {object} model.TokenInfo "token信息"
 // @Failure 500 {object} string "错误code和错误信息"

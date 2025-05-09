@@ -459,6 +459,10 @@ paths:
         in: formData
         name: is_travel
         type: string
+      - description: refresh_token
+        in: formData
+        name: refresh_token
+        type: string
       produces:
       - application/json
       responses:

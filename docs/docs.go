@@ -554,6 +554,12 @@ const docTemplate = `{
                         "description": "is_travel",
                         "name": "is_travel",
                         "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "refresh_token",
+                        "name": "refresh_token",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
