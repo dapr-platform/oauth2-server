@@ -9,7 +9,7 @@ require (
 	github.com/alibabacloud-go/dysmsapi-20170525/v4 v4.1.0
 	github.com/alibabacloud-go/tea v1.2.2
 	github.com/alibabacloud-go/tea-utils/v2 v2.0.7
-	github.com/dapr-platform/common v1.0.0-20250221
+	github.com/dapr-platform/common v1.0.0-20250514-1
 	github.com/dapr/go-sdk v1.11.0
 	github.com/dchest/captcha v1.0.0
 	github.com/go-chi/chi/v5 v5.1.0

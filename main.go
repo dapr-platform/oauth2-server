@@ -166,6 +166,11 @@ func setupRoutes(mux *chi.Mux) {
 	mux.HandleFunc("/users/register", userRegisterHandler)
 	mux.HandleFunc("/sms-code/send", smsCodeSendHandler)
 
+	// SSO routes
+	mux.HandleFunc("/sso/token", ssoTokenHandler)
+	mux.HandleFunc("/sso/logout", ssoLogoutHandler)
+	mux.HandleFunc("/sso/sync-members", ssoSyncMembersHandler)
+
 	// Swagger
 	mux.Handle("/swagger*", httpSwagger.WrapHandler)
 }

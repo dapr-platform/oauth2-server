@@ -68,8 +68,8 @@ github.com/clbanning/mxj/v2 v2.5.6/go.mod h1:hNiWqW14h+kc+MdF9C6/YoRfjEJoR3ou6tn
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
-github.com/dapr-platform/common v1.0.0-20250221 h1:5QTEbbc/D2L5qlrpfQp/L+BoW7+3ZjuYICzF2cdTIxo=
-github.com/dapr-platform/common v1.0.0-20250221/go.mod h1:n4eOSWTax7yQK4845OmCXW4qiBvPZ4v6ZrsYdH/uIpM=
+github.com/dapr-platform/common v1.0.0-20250514-1 h1:5QTEbbc/D2L5qlrpfQp/L+BoW7+3ZjuYICzF2cdTIxo=
+github.com/dapr-platform/common v1.0.0-20250514-1/go.mod h1:n4eOSWTax7yQK4845OmCXW4qiBvPZ4v6ZrsYdH/uIpM=
 github.com/dapr/dapr v1.14.4 h1:OEyAFvpW4AK+MWyX5xp9zVLiC+oY/5ziDzh16F+aoWU=
 github.com/dapr/dapr v1.14.4/go.mod h1:pZGJvUGT4IDhEuWVXBvJ73TkPnLAW34SDagth7G3f8w=
 github.com/dapr/go-sdk v1.11.0 h1:clANpOQd6MsfvSa6snaX8MVk6eRx26Vsj5GxGdQ6mpE=
