@@ -10,6 +10,8 @@ import (
 	"net/http"
 	"oauth2-server/config"
 	"oauth2-server/model"
+	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -118,6 +120,40 @@ type SSOSyncMember struct {
 type SSOSyncMemberPost struct {
 	Main     string `json:"main"`
 	UnitCode string `json:"unitCode"`
+}
+
+// StartSSOSyncScheduler 启动每日定时同步任务
+func StartSSOSyncScheduler() {
+	syncHour := 2 // 默认凌晨2点同步
+	if val := os.Getenv("SSO_SYNC_HOUR"); val != "" {
+		if h, err := strconv.Atoi(val); err == nil && h >= 0 && h < 24 {
+			syncHour = h
+		}
+	}
+
+	go func() {
+		for {
+			now := time.Now()
+			next := time.Date(now.Year(), now.Month(), now.Day(), syncHour, 0, 0, 0, now.Location())
+			if now.After(next) {
+				next = next.Add(24 * time.Hour)
+			}
+			waitDuration := next.Sub(now)
+			common.Logger.Infof("SSO定时同步: 下次执行时间 %s (等待 %v)", next.Format("2006-01-02 15:04:05"), waitDuration)
+
+			timer := time.NewTimer(waitDuration)
+			<-timer.C
+
+			common.Logger.Info("SSO定时同步: 开始执行")
+			ctx := context.Background()
+			count, err := SSOSyncMembers(ctx)
+			if err != nil {
+				common.Logger.Error("SSO定时同步失败: ", err)
+			} else {
+				common.Logger.Infof("SSO定时同步完成, 同步 %d 个用户", count)
+			}
+		}
+	}()
 }
 
 // ssoSign 计算 MD5 签名: MD5(AppSecret + body + AppSecret)

@@ -13,6 +13,7 @@ import (
 	_ "oauth2-server/docs"
 	"oauth2-server/model"
 	_ "oauth2-server/prom"
+	"oauth2-server/service"
 	"os"
 	"strconv"
 	"time"
@@ -198,6 +199,11 @@ func main() {
 	s := daprd.NewServiceWithMux(":"+strconv.Itoa(cfg.ListenPort), mux)
 	if s == nil {
 		log.Fatal("Failed to create server")
+	}
+
+	if config.SSO_ENABLED {
+		service.StartSSOSyncScheduler()
+		common.Logger.Info("SSO sync scheduler started")
 	}
 
 	common.Logger.Info("server starting on port", cfg.ListenPort)
