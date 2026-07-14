@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"oauth2-server/config"
+	"oauth2-server/model"
 	"oauth2-server/service"
 
 	"github.com/dapr-platform/common"
@@ -137,5 +138,67 @@ func ssoSyncMembersHandler(w http.ResponseWriter, r *http.Request) {
 
 	common.HttpSuccess(w, common.OK.WithData(map[string]interface{}{
 		"synced_count": syncCount,
+	}))
+}
+
+// SSOUserInfo 不含密码的用户信息（调试用）
+type SSOUserInfo struct {
+	ID         string           `json:"id"`
+	Name       string           `json:"name"`
+	Identity   string           `json:"identity"`
+	Mobile     string           `json:"mobile"`
+	Email      string           `json:"email"`
+	Gender     int32            `json:"gender"`
+	OrgID      string           `json:"org_id"`
+	WorkNumber string           `json:"work_number"`
+	Status     int32            `json:"status"`
+	Type       int32            `json:"type"`
+	CreateAt   common.LocalTime `json:"create_at"`
+	UpdateAt   common.LocalTime `json:"update_at"`
+}
+
+// @Summary SSO状态
+// @Description 查看SSO配置和同步状态
+// @Tags SSO
+// @Produce json
+// @Success 200 {object} common.Response "SSO状态"
+// @Router /sso/status [get]
+func ssoStatusHandler(w http.ResponseWriter, r *http.Request) {
+	common.HttpSuccess(w, common.OK.WithData(map[string]interface{}{
+		"sso_enabled":  config.SSO_ENABLED,
+		"sso_base_url": config.SSO_BASE_URL,
+		"sso_app_key":  config.SSO_APP_KEY,
+	}))
+}
+
+// @Summary SSO同步用户列表
+// @Description 查看通过SSO同步到本地的用户列表（identity不为空的用户）
+// @Tags SSO
+// @Produce json
+// @Success 200 {object} common.Response "用户列表"
+// @Failure 500 {object} common.Response "系统错误"
+// @Router /sso/users [get]
+func ssoUsersHandler(w http.ResponseWriter, r *http.Request) {
+	users, err := common.DbQuery[model.User](r.Context(), common.GetDaprClient(),
+		model.UserTableInfo.Name, "identity_ne=&_select=id,name,identity,mobile,email,gender,org_id,work_number,status,type,create_at,update_at")
+	if err != nil {
+		common.HttpResult(w, common.ErrService.AppendMsg(err.Error()))
+		return
+	}
+
+	result := make([]SSOUserInfo, 0, len(users))
+	for _, u := range users {
+		result = append(result, SSOUserInfo{
+			ID: u.ID, Name: u.Name, Identity: u.Identity,
+			Mobile: u.Mobile, Email: u.Email, Gender: u.Gender,
+			OrgID: u.OrgID, WorkNumber: u.WorkNumber,
+			Status: u.Status, Type: u.Type,
+			CreateAt: u.CreateAt, UpdateAt: u.UpdateAt,
+		})
+	}
+
+	common.HttpSuccess(w, common.OK.WithData(map[string]interface{}{
+		"total": len(result),
+		"users": result,
 	}))
 }
