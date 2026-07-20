@@ -199,7 +199,7 @@ func ssoDoRequest(url string, reqBody interface{}) ([]byte, error) {
 
 // SSORestoreTicket 调用中台验证 ticket，返回用户信息
 func SSORestoreTicket(ticket string) (*SSOUserContent, error) {
-	url := strings.TrimRight(config.SSO_BASE_URL, "/") + "/service/ctp-user/auth/restore"
+	url := strings.TrimRight(config.SSO_BASE_URL, "/") + "/cip-connector/sso/login"
 	reqBody := &SSORestoreRequest{Ticket: ticket}
 
 	respBody, err := ssoDoRequest(url, reqBody)
