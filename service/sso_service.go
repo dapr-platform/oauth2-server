@@ -199,7 +199,7 @@ func ssoDoRequest(url string, reqBody interface{}) ([]byte, error) {
 
 // SSORestoreTicket 调用中台验证 ticket，返回用户信息
 func SSORestoreTicket(ticket string) (*SSOUserContent, error) {
-	url := strings.TrimRight(config.SSO_BASE_URL, "/") + "/cip-connector/sso/login"
+	url := strings.TrimRight(config.SSO_TICKET_BASE_URL, "/") + "/service/ctp-user/auth/restore"
 	reqBody := &SSORestoreRequest{Ticket: ticket}
 
 	respBody, err := ssoDoRequest(url, reqBody)
@@ -220,7 +220,7 @@ func SSORestoreTicket(ticket string) (*SSOUserContent, error) {
 
 // SSORevokeByCode 调用中台登出接口
 func SSORevokeByCode(code string) error {
-	url := strings.TrimRight(config.SSO_BASE_URL, "/") + "/service/ctp-user/auth/token/revoke-by-code"
+	url := strings.TrimRight(config.SSO_TICKET_BASE_URL, "/") + "/service/ctp-user/auth/token/revoke-by-code"
 	reqBody := &SSORevokeRequest{Code: code}
 
 	respBody, err := ssoDoRequest(url, reqBody)
