@@ -169,6 +169,7 @@ func ssoDoRequest(url string, reqBody interface{}) ([]byte, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "json marshal")
 	}
+	common.Logger.Infof("SSO请求: %s", string(bodyBytes))
 	sign := ssoSign(bodyBytes)
 
 	req, err := http.NewRequest("POST", url, bytes.NewReader(bodyBytes))
