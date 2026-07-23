@@ -256,6 +256,8 @@ func SSOSyncMembers(ctx context.Context) (syncCount int, err error) {
 				common.Logger.Error("同步用户失败: ", member.Code, " error: ", err)
 				continue
 			}
+			memberJson, _ := json.Marshal(member)
+			common.Logger.Infof("同步用户成功: %s", string(memberJson))
 			totalSynced++
 		}
 
