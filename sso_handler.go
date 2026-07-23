@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"net/http"
 	"oauth2-server/config"
 	"oauth2-server/model"
@@ -54,8 +55,9 @@ func ssoTokenHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if user == nil {
-		common.Logger.Error("SSO用户在本地不存在, code: " + ssoUser.Code)
-		common.HttpResult(w, common.ErrParam.AppendMsg("用户不存在，请先同步用户数据"))
+		ssoUserJson, _ := json.Marshal(ssoUser)
+		common.HttpResult(w, common.ErrParam.AppendMsg("用户不存在，请先同步用户数据,ssoUser: "+string(ssoUserJson)))
+		common.Logger.Error("SSO用户在本地不存在, code: " + ssoUser.Code + ", ssoUser: " + string(ssoUserJson))
 		return
 	}
 	if user.Status != 1 {
