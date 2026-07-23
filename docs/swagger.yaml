@@ -18,6 +18,11 @@ definitions:
       status:
         type: integer
     type: object
+  main.SSOTokenRequest:
+    properties:
+      ticket:
+        type: string
+    type: object
   model.Client_info:
     properties:
       id:
@@ -550,6 +555,108 @@ paths:
       summary: 发送短信验证码
       tags:
       - Oauth2
+  /sso/logout:
+    post:
+      description: 登出本地会话并通知中台登出
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 登出成功
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 系统错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: SSO登出
+      tags:
+      - SSO
+  /sso/status:
+    get:
+      description: 查看SSO配置和同步状态
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: SSO状态
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: SSO状态
+      tags:
+      - SSO
+  /sso/sync-members:
+    post:
+      description: 从中台全量同步用户到本地
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 同步结果
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 系统错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: SSO用户同步
+      tags:
+      - SSO
+  /sso/token:
+    post:
+      consumes:
+      - application/json
+      description: 通过中台SSO ticket换取本地OAuth2 token
+      parameters:
+      - description: SSO ticket
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/main.SSOTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: token信息
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 系统错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: SSO登录
+      tags:
+      - SSO
+  /sso/users:
+    get:
+      description: 查看通过SSO同步到本地的用户列表（identity不为空的用户）
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 用户列表
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: 系统错误
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: SSO同步用户列表
+      tags:
+      - SSO
   /user:
     get:
       description: query objects
