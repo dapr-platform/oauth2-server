@@ -118,7 +118,7 @@ type SSOSyncMember struct {
 }
 
 type SSOSyncMemberPost struct {
-	Main     string `json:"main"`
+	Main     bool `json:"main"`
 	UnitCode string `json:"unitCode"`
 }
 
@@ -338,7 +338,7 @@ func ssoUpsertLocalUser(ctx context.Context, member *SSOSyncMember) error {
 	orgID := ""
 	if len(member.MemberPosts) > 0 {
 		for _, post := range member.MemberPosts {
-			if post.Main == "true" {
+			if post.Main {
 				orgID = post.UnitCode
 				break
 			}
