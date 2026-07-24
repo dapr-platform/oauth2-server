@@ -304,7 +304,7 @@ func ssoFetchMembersPage(pageNumber, pageSize int) ([]SSOSyncMember, bool, strin
 
 	var result SSOSyncResponse
 	if err := json.Unmarshal(respBody, &result); err != nil {
-		return nil, false, "", errors.Wrap(err, "解析人员列表返回")
+		return nil, false, "", errors.Wrap(err, "解析人员列表返回 "+string(respBody))
 	}
 
 	if result.Data == nil {
