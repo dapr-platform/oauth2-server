@@ -112,7 +112,7 @@ type SSOSyncMember struct {
 	Gender      string              `json:"gender"`
 	PhoneNumber string              `json:"phoneNumber"`
 	Email       string              `json:"email"`
-	IsEnable    string              `json:"isEnable"`
+	IsEnable    bool                `json:"isEnable"`
 	MemberType  string              `json:"memberType"`
 	MemberPosts []SSOSyncMemberPost `json:"memberPosts"`
 }
@@ -331,7 +331,7 @@ func ssoUpsertLocalUser(ctx context.Context, member *SSOSyncMember) error {
 	now := common.LocalTime(time.Now())
 	gender := ssoMapGender(member.Gender)
 	status := int32(1)
-	if member.IsEnable != "true" {
+	if !member.IsEnable {
 		status = 2
 	}
 
