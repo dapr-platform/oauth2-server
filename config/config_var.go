@@ -36,6 +36,9 @@ func init() {
 	if val := os.Getenv("SSO_BASE_URL"); val != "" {
 		SSO_BASE_URL = val
 	}
+	if val := os.Getenv("SSO_TICKET_BASE_URL"); val != "" {
+		SSO_TICKET_BASE_URL = val
+	}
 	if val := os.Getenv("SSO_APP_KEY"); val != "" {
 		SSO_APP_KEY = val
 	}
