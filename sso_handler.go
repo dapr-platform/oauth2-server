@@ -131,7 +131,7 @@ func ssoSyncMembersHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	syncCount, err := service.SSOSyncMembers(r.Context())
+	syncCount, reqBody, err := service.SSOSyncMembers(r.Context())
 	if err != nil {
 		common.Logger.Error("SSO用户同步失败: " + err.Error())
 		common.HttpResult(w, common.ErrService.AppendMsg(err.Error()))
@@ -140,6 +140,7 @@ func ssoSyncMembersHandler(w http.ResponseWriter, r *http.Request) {
 
 	common.HttpSuccess(w, common.OK.WithData(map[string]interface{}{
 		"synced_count": syncCount,
+		"req_body":     reqBody,
 	}))
 }
 

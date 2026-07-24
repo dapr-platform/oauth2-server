@@ -70,10 +70,10 @@ type SSOSyncRequest struct {
 }
 
 type SSOSyncParams struct {
-	Code           string `json:"code,omitempty"`
-	IncludeChild   bool   `json:"includeChild"`
-	IncludeDisable bool   `json:"includeDisable"`
-	MemberType     string `json:"memberType,omitempty"`
+	Code         string `json:"code,omitempty"`
+	IncludeChild bool   `json:"includeChild"`
+	StartTime    string `json:"startTime,omitempty"`
+	EndTime      string `json:"endTime,omitempty"`
 }
 
 type SSOSort struct {
@@ -146,7 +146,7 @@ func StartSSOSyncScheduler() {
 
 			common.Logger.Info("SSO定时同步: 开始执行")
 			ctx := context.Background()
-			count, err := SSOSyncMembers(ctx)
+			count, _, err := SSOSyncMembers(ctx)
 			if err != nil {
 				common.Logger.Error("SSO定时同步失败: ", err)
 			} else {
@@ -241,16 +241,17 @@ func SSORevokeByCode(code string) error {
 }
 
 // SSOSyncMembers 从中台全量同步人员到本地 o_user 表
-func SSOSyncMembers(ctx context.Context) (syncCount int, err error) {
+func SSOSyncMembers(ctx context.Context) (syncCount int, reqBody string, err error) {
 	pageNumber := 1
 	pageSize := 100
 	totalSynced := 0
 
 	for {
-		members, hasMore, err := ssoFetchMembersPage(pageNumber, pageSize)
+		members, hasMore, reqBodyJson, err := ssoFetchMembersPage(pageNumber, pageSize)
 		if err != nil {
-			return totalSynced, errors.Wrapf(err, "获取第%d页人员数据", pageNumber)
+			return totalSynced, reqBodyJson, errors.Wrapf(err, "获取第%d页人员数据", pageNumber)
 		}
+		reqBody = reqBodyJson
 
 		for _, member := range members {
 			if err := ssoUpsertLocalUser(ctx, &member); err != nil {
@@ -269,20 +270,22 @@ func SSOSyncMembers(ctx context.Context) (syncCount int, err error) {
 	}
 
 	common.Logger.Infof("SSO用户同步完成, 共同步 %d 个用户", totalSynced)
-	return totalSynced, nil
+	return totalSynced, reqBody, nil
 }
 
 // ssoFetchMembersPage 分页获取中台人员数据
-func ssoFetchMembersPage(pageNumber, pageSize int) ([]SSOSyncMember, bool, error) {
+func ssoFetchMembersPage(pageNumber, pageSize int) ([]SSOSyncMember, bool, string, error) {
 	url := strings.TrimRight(config.SSO_BASE_URL, "/") + "/organization/unit/members"
-
+	endTimeStr := time.Now().Format("2006-01-02")
 	reqBody := &SSOSyncRequest{
 		RequestID: fmt.Sprintf("%d", time.Now().UnixMilli()),
 		Timestamp: time.Now().UnixMilli(),
 		NotifyURL: "",
 		Params: &SSOSyncParams{
-			IncludeChild:   true,
-			IncludeDisable: false,
+			Code:         "group",
+			StartTime:    "2023-04-17",
+			EndTime:      endTimeStr,
+			IncludeChild: true,
 		},
 		Sort: &SSOSort{
 			Orders: []SSOSortOrder{{Property: "createTime", Direction: "ASC"}},
@@ -296,24 +299,24 @@ func ssoFetchMembersPage(pageNumber, pageSize int) ([]SSOSyncMember, bool, error
 
 	respBody, err := ssoDoRequest(url, reqBody)
 	if err != nil {
-		return nil, false, errors.Wrap(err, "请求中台人员列表")
+		return nil, false, "", errors.Wrap(err, "请求中台人员列表")
 	}
 
 	var result SSOSyncResponse
 	if err := json.Unmarshal(respBody, &result); err != nil {
-		return nil, false, errors.Wrap(err, "解析人员列表返回")
+		return nil, false, "", errors.Wrap(err, "解析人员列表返回")
 	}
 
 	if result.Data == nil {
-		return nil, false, fmt.Errorf("中台人员列表返回为空: code=%s, message=%s", result.Code, result.Message)
+		return nil, false, "", fmt.Errorf("中台人员列表返回为空: code=%s, message=%s", result.Code, result.Message)
 	}
 
 	hasMore := false
 	if result.Data.PageInfo != nil && result.Data.PageInfo.Pages > pageNumber {
 		hasMore = true
 	}
-
-	return result.Data.Content, hasMore, nil
+	reqBodyJson, _ := json.Marshal(reqBody)
+	return result.Data.Content, hasMore, string(reqBodyJson), nil
 }
 
 // ssoUpsertLocalUser 将中台人员数据写入/更新到本地 o_user 表
